@@ -2,12 +2,18 @@ package com.medilabosolutions.back_patient.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 
 @Entity
 @Table(name = "patients")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Patient {
 
     @Id
