@@ -82,5 +82,4 @@ public class PatientController {
         return ResponseEntity.status(HttpStatus.OK).body("Le patient avec l'id " + id + " est supprimé");
     }
 
-
 }
