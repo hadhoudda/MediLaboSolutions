@@ -5,6 +5,7 @@ spring:
         webflux:
           routes:
             - id: r1
-              uri: http://localhost:8081
+#              uri: http://localhost:8081
+              uri: lb://MICROSERVICE-PATIENT
               predicates:
                 - Path= /patient/**
