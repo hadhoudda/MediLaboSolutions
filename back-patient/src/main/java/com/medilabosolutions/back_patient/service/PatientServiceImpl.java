@@ -5,16 +5,17 @@ import com.medilabosolutions.back_patient.model.Patient;
 import com.medilabosolutions.back_patient.repository.PatientRepository;
 import com.medilabosolutions.back_patient.service.contracts.IPatientService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PatientService implements IPatientService {
+public class PatientServiceImpl implements IPatientService {
 
     private final PatientRepository patientRepository;
 
-    public PatientService(PatientRepository patientRepository) {
+    public PatientServiceImpl(PatientRepository patientRepository) {
         this.patientRepository = patientRepository;
     }
 
@@ -30,16 +31,15 @@ public class PatientService implements IPatientService {
 
     @Override
     public Patient addPatient(Patient patient) {
+
+        Assert.isNull(patient.getId(), "Not Id on save");
         return patientRepository.save(patient);
     }
 
     @Override
     public Patient updatePatient(Patient patient){
+        Assert.isNull(patient.getId(), "Not Id on save");
         return patientRepository.save(patient);
     }
 
-    @Override
-    public void deletePatient(int id){
-        patientRepository.deleteById(id);
-    }
 }

@@ -14,6 +14,4 @@ public interface IPatientService {
     Optional<Patient> findPatient(int id);
     Patient addPatient(Patient patient);
     Patient updatePatient(Patient patient);
-    void deletePatient(int id);
-
 }

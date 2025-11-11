@@ -1,6 +1,7 @@
 package com.medilabosolutions.back_patient.controller;
 
 
+import com.medilabosolutions.back_patient.exceptions.PatientNotFoundException;
 import com.medilabosolutions.back_patient.model.Patient;
 import com.medilabosolutions.back_patient.service.contracts.IPatientService;
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +25,7 @@ public class PatientController {
         this.iPatientService = iPatientService;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<Patient>> getPatient(){
         List<Patient> patientList = iPatientService.findAllPatients();
         if (!patientList.isEmpty()){
@@ -36,13 +37,13 @@ public class PatientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getPatientById(@PathVariable int id){
+    public ResponseEntity<?> getPatientById(@PathVariable int id) throws PatientNotFoundException {
         Optional<Patient> patient = iPatientService.findPatient(id);
         if(!patient.isEmpty()){
             return ResponseEntity.ok(patient.get());
         } else {
-            //logger.info("patient n'existe pas");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("patient n'existe pas");
+            throw new PatientNotFoundException("Le patient avec l'id " + id + " n'existe pas");
+
         }
     }
 
@@ -58,28 +59,15 @@ public class PatientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePatient(@PathVariable int id, @RequestBody Patient patient) {
+    public ResponseEntity<?> updatePatient(@PathVariable int id, @RequestBody Patient patient) throws PatientNotFoundException {
         Optional<Patient> existingPatient = iPatientService.findPatient(patient.getId());
         if (existingPatient.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Le patient avec l'id " + id + " n'existe pas");
+            throw new PatientNotFoundException("Le patient avec l'id " + id + " n'existe pas");
         }
 
         patient.setId(id);
         Patient updatedPatient = iPatientService.updatePatient(patient);
         return ResponseEntity.ok(updatedPatient);
-    }
-
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> deletePatient(@PathVariable int id){
-        Optional<Patient> existingPatient = iPatientService.findPatient(id);
-        if (existingPatient.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Le patient avec l'id " + id + " n'existe pas");
-        }
-
-        iPatientService.deletePatient(id);
-        return ResponseEntity.status(HttpStatus.OK).body("Le patient avec l'id " + id + " est supprimé");
     }
 
 }
