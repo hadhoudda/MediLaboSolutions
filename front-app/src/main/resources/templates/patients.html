@@ -10,7 +10,6 @@
 <table>
     <thead>
     <tr>
-        <th>ID</th>
         <th>Nom</th>
         <th>Prénom</th>
         <th>Date de naissance</th>
@@ -21,7 +20,6 @@
     </thead>
     <tbody>
     <tr th:each="p : ${patients}">
-        <td th:text="${p.id}"></td>
         <td th:text="${p.lastName}"></td>
         <td th:text="${p.firstName}"></td>
         <td th:text="${#dates.format(p.dateOfBirth, 'dd/MM/yyyy')}"></td>

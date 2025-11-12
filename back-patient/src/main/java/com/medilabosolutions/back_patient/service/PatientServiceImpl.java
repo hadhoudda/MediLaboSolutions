@@ -1,6 +1,5 @@
 package com.medilabosolutions.back_patient.service;
 
-
 import com.medilabosolutions.back_patient.model.Patient;
 import com.medilabosolutions.back_patient.repository.PatientRepository;
 import com.medilabosolutions.back_patient.service.contracts.IPatientService;
@@ -20,25 +19,24 @@ public class PatientServiceImpl implements IPatientService {
     }
 
     @Override
-    public List<Patient> findAllPatients(){
+    public List<Patient> findAllPatients() {
         return patientRepository.findAll();
     }
 
     @Override
-    public Optional<Patient> findPatient(int id){
+    public Optional<Patient> findPatient(int id) {
         return patientRepository.findById(id);
     }
 
     @Override
     public Patient addPatient(Patient patient) {
-
-        Assert.isNull(patient.getId(), "Not Id on save");
+        Assert.isTrue(patient.getId() == null, "Le patient ne doit pas avoir d'ID lors de la création");
         return patientRepository.save(patient);
     }
 
     @Override
-    public Patient updatePatient(Patient patient){
-        Assert.isNull(patient.getId(), "Not Id on save");
+    public Patient updatePatient(Patient patient) {
+        Assert.notNull(patient.getId(), "L'ID est requis pour la mise à jour");
         return patientRepository.save(patient);
     }
 

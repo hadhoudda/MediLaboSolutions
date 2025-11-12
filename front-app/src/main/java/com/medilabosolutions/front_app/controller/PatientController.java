@@ -7,10 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class PatientController {
@@ -31,6 +33,21 @@ public class PatientController {
         model.addAttribute("patients", patients);
         model.addAttribute("gatewayPrefix", gatewayPrefix);
         return "patients";
+    }
+
+    @RequestMapping("/patients/{id}")
+    public String detailPatient(@PathVariable("id") int id, Model model) {
+
+        ResponseEntity<PatientBean> response = patientProxy.getPatientById(id);
+
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            model.addAttribute("patient", response.getBody());
+        } else {
+            // si pas trouvé, tu peux rediriger vers une page d’erreur ou afficher un message
+            model.addAttribute("error", "Patient non trouvé");
+        }
+
+        return "detailPatient"; // nom du template Thymeleaf
     }
 //    private final WebClient webClient;
 //
