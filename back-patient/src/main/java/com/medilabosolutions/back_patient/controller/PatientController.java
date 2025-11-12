@@ -5,6 +5,7 @@ import com.medilabosolutions.back_patient.exceptions.PatientNotFoundException;
 import com.medilabosolutions.back_patient.mapper.PatientMapper;
 import com.medilabosolutions.back_patient.model.Patient;
 import com.medilabosolutions.back_patient.service.contracts.IPatientService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,13 +45,13 @@ public class PatientController {
     }
 
     @PostMapping
-    public ResponseEntity<PatientDto> createPatient(@RequestBody PatientDto dto) {
+    public ResponseEntity<PatientDto> createPatient(@Valid @RequestBody PatientDto dto) {
         Patient saved = patientService.addPatient(mapper.toEntity(dto));
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toDto(saved));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PatientDto> updatePatient(@PathVariable int id, @RequestBody PatientDto dto) throws PatientNotFoundException {
+    public ResponseEntity<PatientDto> updatePatient(@PathVariable int id, @Valid @RequestBody PatientDto dto) throws PatientNotFoundException {
         patientService.findPatient(id)
                 .orElseThrow(() -> new PatientNotFoundException("Le patient avec l'id " + id + " n'existe pas"));
 

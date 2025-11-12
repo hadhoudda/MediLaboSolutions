@@ -1,5 +1,4 @@
-
-INSERT INTO patients (first_name, last_name, date_of_birth, gender, address, telephone)
+INSERT INTO patients (first_name, last_name, date_of_birth, gender, address, telephone_number)
 VALUES
 ('TestNone', 'Test', '1966-12-31', 'F', '1 Brookside St', '100-222-3333'),
 ('TestBorderline', 'Test', '1945-06-24', 'M', '2 High St', '200-333-4444'),

@@ -1,13 +1,14 @@
 package com.medilabosolutions.back_patient.exceptions;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 public class ErrorResponse {
 
-    // getters & setters
     private LocalDateTime timestamp;
     private int status;
     private String error;
