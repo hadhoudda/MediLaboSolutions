@@ -16,6 +16,11 @@
     <img th:src="@{/images/profil.jpeg}" alt="image de profil" class="img-fluid mb-4" style="width: 85%; max-height: 200px; object-fit: cover; border-radius: 10px;"/>
 
     <h1>Liste des patients</h1>
+    <div class="mb-3 text-end">
+        <a th:href="@{/register}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Ajouter un nouveau patient
+        </a>
+    </div>
 
     <div class="container">
         <table class="table table-success table-striped w-75 mx-auto mt-4 " >
@@ -44,6 +49,7 @@
             </tr>
             </tbody>
         </table>
+
     </div>
         <!-- Bootstrap JS -->
         <script
