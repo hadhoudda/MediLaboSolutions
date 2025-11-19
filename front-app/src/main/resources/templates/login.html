@@ -24,14 +24,12 @@
                 <img th:src="@{/images/profil.jpeg}" alt="Profil" class="rounded-circle" width="80">
             </div>
 
-<!--            <form th:action="@{${gatewayPrefix}+'/patients'}" method="post">-->
 
-            <form th:action="@{/front-app/patients}" method="post">
+            <form th:action="@{/front-app/login}" method="post">
                 <div class="mb-3 text-start">
-                    <label for="email" class="form-label">Adresse email</label>
-                    <input type="email" id="email" name="email" class="form-control" placeholder="Entrez votre email" required>
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Entrez votre nom d'utilisateur" required >
                 </div>
-
                 <div class="mb-3 text-start">
                     <label for="password" class="form-label">Mot de passe</label>
                     <input type="password" id="password" name="password" class="form-control" placeholder="Entrez votre mot de passe" required>
@@ -46,7 +44,7 @@
             </form>
 
             <div class="text-center mt-3">
-                <small>Pas encore de compte ? <a th:href="@{/front-app/home}">Créer un compte</a></small>
+                <small>Pas encore de compte ? <a th:href="@{/front-app/login}">Créer un compte</a></small>
             </div>
         </div>
 

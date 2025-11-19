@@ -14,26 +14,16 @@ import java.util.List;
 @RequestMapping
 public class PatientController {
 
-    @Value("${app.gateway.prefix}")
-    private String gatewayPrefix;
-
     private final MicroservicePatientProxy patientProxy;
 
     public PatientController(MicroservicePatientProxy patientProxy) {
         this.patientProxy = patientProxy;
     }
 
-    @PostMapping("/patients")
-    public String login(String email, String password, Model model) {
-        // securise apres
-        return "redirect:/patients";
-    }
-
     @GetMapping("/patients")
     public String listPatients(Model model) {
         List<PatientBean> patients = patientProxy.getListPatient();
         model.addAttribute("patients", patients);
-        model.addAttribute("gatewayPrefix", gatewayPrefix);
         return "patients";
     }
 
@@ -42,6 +32,26 @@ public class PatientController {
         PatientBean patient = patientProxy.getPatientById(id);
         model.addAttribute("patient", patient);
         return "patient";
+    }
+
+    @GetMapping("/patient/register")
+    public String showRegisterForm(Model model) {
+        //model.addAttribute("patient", new PatientBean());
+        return "register";
+    }
+
+    @PostMapping("/patient/register")
+    public String registerPatient(@RequestBody PatientBean patientBean,
+                                  Model model){
+        PatientBean patientRegister = patientProxy.createPatient(patientBean);
+        model.addAttribute("patient", patientRegister);
+        return "register";
+    }
+
+    @GetMapping("/patient/edit/{id}")
+    public String showEditForm(Model model) {
+        //model.addAttribute("patient", new PatientBean());
+        return "edit";
     }
 
     @PutMapping("/patient/edit/{id}")

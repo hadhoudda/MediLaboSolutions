@@ -2,6 +2,7 @@ package com.medilabosolutions.front_app.proxies;
 
 import com.medilabosolutions.front_app.Beans.PatientBean;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,15 +10,18 @@ import java.util.List;
 @FeignClient(name = "back-patient")
 public interface MicroservicePatientProxy {
 
-    @GetMapping("/patient")
+//    @PostMapping("/login")
+//    ResponseEntity<>
+
+    @GetMapping("/patients")
     List<PatientBean> getListPatient();
 
-    @GetMapping("/patient/{id}")
+    @GetMapping("/patients/{id}")
     PatientBean getPatientById(@PathVariable("id") int id);
 
-    @PostMapping("/patient")
+    @PostMapping("/patients")
     PatientBean createPatient(@RequestBody PatientBean patientBean);
 
-    @PutMapping("/patient/{id}")
+    @PutMapping("/patients/{id}")
     PatientBean updatePatient(@PathVariable int id, @RequestBody PatientBean patientBean);
 }

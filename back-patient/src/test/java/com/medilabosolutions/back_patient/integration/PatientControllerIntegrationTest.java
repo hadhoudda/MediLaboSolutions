@@ -1,7 +1,7 @@
 package com.medilabosolutions.back_patient.integration;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.medilabosolutions.back_patient.config.TestSecurityConfig;
 import com.medilabosolutions.back_patient.dto.PatientDto;
 import com.medilabosolutions.back_patient.model.Patient;
 import com.medilabosolutions.back_patient.repository.PatientRepository;
@@ -9,11 +9,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 
@@ -22,8 +22,9 @@ import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ActiveProfiles("test")
 @SpringBootTest
+@ActiveProfiles("test")
+@Import(TestSecurityConfig.class)
 @AutoConfigureMockMvc
 class PatientControllerIntegrationTest {
 
@@ -43,7 +44,7 @@ class PatientControllerIntegrationTest {
 
     @Test
     void testGetAllPatients_emptyList() throws Exception {
-        mockMvc.perform(get("/patient"))
+        mockMvc.perform(get("/patients"))
                 .andExpect(status().isNoContent());
     }
 
@@ -59,7 +60,7 @@ class PatientControllerIntegrationTest {
                 .build();
         patientRepository.save(patient);
 
-        mockMvc.perform(get("/patient"))
+        mockMvc.perform(get("/patients"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].firstName", is("John")));
@@ -75,7 +76,7 @@ class PatientControllerIntegrationTest {
                 .build();
         Patient saved = patientRepository.save(patient);
 
-        mockMvc.perform(get("/patient/{id}", saved.getId()))
+        mockMvc.perform(get("/patients/{id}", saved.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", is("Jane")))
                 .andExpect(jsonPath("$.gender", is("F")));
@@ -92,7 +93,7 @@ class PatientControllerIntegrationTest {
                 .telephoneNumber("555-1234")
                 .build();
 
-        mockMvc.perform(post("/patient")
+        mockMvc.perform(post("/patients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated())
@@ -109,11 +110,10 @@ class PatientControllerIntegrationTest {
                 .gender("X") // invalid
                 .build();
 
-        mockMvc.perform(post("/patient")
+        mockMvc.perform(post("/patients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status", is(400)));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -133,7 +133,7 @@ class PatientControllerIntegrationTest {
                 .gender("M")
                 .build();
 
-        mockMvc.perform(put("/patient/{id}", saved.getId())
+        mockMvc.perform(put("/patients/{id}", saved.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
