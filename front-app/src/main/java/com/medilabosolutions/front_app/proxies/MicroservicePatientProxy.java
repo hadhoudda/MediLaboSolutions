@@ -13,15 +13,15 @@ public interface MicroservicePatientProxy {
 //    @PostMapping("/login")
 //    ResponseEntity<>
 
-    @GetMapping("/patients")
+    @GetMapping("/patient")
     List<PatientBean> getListPatient();
 
-    @GetMapping("/patients/{id}")
+    @GetMapping("/patient/{id}")
     PatientBean getPatientById(@PathVariable("id") int id);
 
-    @PostMapping("/patients")
+    @PostMapping("/patient")
     PatientBean createPatient(@RequestBody PatientBean patientBean);
 
-    @PutMapping("/patients/{id}")
+    @PutMapping("/patient/{id}")
     PatientBean updatePatient(@PathVariable int id, @RequestBody PatientBean patientBean);
 }

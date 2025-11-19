@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/patient")
 @RequiredArgsConstructor
 public class PatientController {
 
@@ -24,7 +24,7 @@ public class PatientController {
     private final IPatientService patientService;
     private final PatientMapper mapper;
 
-    @GetMapping("/patients")
+    @GetMapping
     public ResponseEntity<List<PatientDto>> getAllPatients() {
         var patients = patientService.findAllPatients();
 
@@ -36,8 +36,7 @@ public class PatientController {
         return ResponseEntity.ok(mapper.toDtoList(patients));
     }
 
-
-    @GetMapping("/patients/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<PatientDto> getPatientById(@PathVariable int id) throws PatientNotFoundException {
         Patient patient = patientService.findPatient(id)
                 .orElseThrow(() -> new PatientNotFoundException("Le patient avec l'id " + id + " n'existe pas"));
@@ -45,13 +44,13 @@ public class PatientController {
         return ResponseEntity.ok(mapper.toDto(patient));
     }
 
-    @PostMapping("/patients")
+    @PostMapping
     public ResponseEntity<PatientDto> createPatient(@Valid @RequestBody PatientDto dto) {
         Patient saved = patientService.addPatient(mapper.toEntity(dto));
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toDto(saved));
     }
 
-    @PutMapping("/patients/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<PatientDto> updatePatient(@PathVariable int id, @Valid @RequestBody PatientDto dto) throws PatientNotFoundException {
         patientService.findPatient(id)
                 .orElseThrow(() -> new PatientNotFoundException("Le patient avec l'id " + id + " n'existe pas"));
