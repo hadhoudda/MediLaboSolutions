@@ -1,11 +1,10 @@
-spring:
-  cloud:
-    gateway:
-      server:
-        webflux:
-          routes:
-            - id: r1
-#              uri: http://localhost:8081
-              uri: lb://MICROSERVICE-PATIENT
-              predicates:
-                - Path= /patient/**
+#spring:
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: front-app
+#          uri: lb://FRONT-APP
+#          predicates:
+#            - Path=/front-app/**
+#          filters:
+#            - RewritePath=/front-app/(?<segment>.*), /${segment}
