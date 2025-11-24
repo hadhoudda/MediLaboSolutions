@@ -16,15 +16,11 @@
     <img th:src="@{/images/profil.jpeg}" alt="image de profil" class="img-fluid mb-4" style="width: 85%; max-height: 200px; object-fit: cover; border-radius: 10px;"/>
 
     <h1>Liste des patients</h1>
-    <!-- Bouton de déconnexion -->
-    <form th:action="@{/login}" >
-        <button type="submit" class="btn btn-danger">
-            Se déconnecter
-        </button>
-    </form>
-    <a th:href="@{/patients/register}" class="btn btn-success btn-sm px-3 py-1" style="font-size: 0.85rem;">
-        <i class="bi bi-person-plus"></i> Ajouter un patient
-    </a>
+    <div class="mb-3 text-end">
+        <a th:href="@{/register}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Ajouter un nouveau patient
+        </a>
+    </div>
 
     <div class="container">
         <table class="table table-success table-striped w-75 mx-auto mt-4 " >
@@ -43,7 +39,7 @@
             <tr th:each="p : ${patients}">
                 <td th:text="${p.lastName}"></td>
                 <td th:text="${p.firstName}"></td>
-                <td th:text="${#dates.format(p.dateOfBirth, 'dd-MM-yyyy')}"></td>
+                <td th:text="${#dates.format(p.dateOfBirth, 'dd/MM/yyyy')}"></td>
                 <td th:text="${p.gender}"></td>
                 <td th:text="${p.address}"></td>
                 <td th:text="${p.telephoneNumber}"></td>
@@ -53,6 +49,7 @@
             </tr>
             </tbody>
         </table>
+
     </div>
         <!-- Bootstrap JS -->
         <script
