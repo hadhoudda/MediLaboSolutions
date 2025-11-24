@@ -1,13 +1,12 @@
 package com.medilabosolutions.frontservice.proxies;
 
 import com.medilabosolutions.frontservice.Beans.PatientBean;
-import com.medilabosolutions.frontservice.config.JacksonConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "api-patient" , configuration = JacksonConfig.class)
+@FeignClient(name = "api-patient" )
 public interface MicroservicePatientProxy {
 
     @GetMapping("/api/patients")

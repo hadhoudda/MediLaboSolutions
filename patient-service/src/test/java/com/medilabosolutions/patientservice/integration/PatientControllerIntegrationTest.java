@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -43,7 +45,7 @@ class PatientControllerIntegrationTest {
 
     @Test
     void testGetAllPatients_emptyList() throws Exception {
-        mockMvc.perform(get("/patient"))
+        mockMvc.perform(get("/api/patients"))
                 .andExpect(status().isNoContent());
     }
 
@@ -52,14 +54,20 @@ class PatientControllerIntegrationTest {
         Patient patient = Patient.builder()
                 .firstName("John")
                 .lastName("Doe")
-                .dateOfBirth(LocalDate.of(1990, 1, 1))
+                .dateOfBirth(
+                        Date.from(
+                                LocalDate.of(1990, 1, 1)
+                                        .atStartOfDay(ZoneId.systemDefault())
+                                        .toInstant()
+                        )
+                )
                 .gender("M")
                 .address("123 Street")
                 .telephoneNumber("123456")
                 .build();
         patientRepository.save(patient);
 
-        mockMvc.perform(get("/patient"))
+        mockMvc.perform(get("/api/patients"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].firstName", is("John")));
@@ -70,12 +78,18 @@ class PatientControllerIntegrationTest {
         Patient patient = Patient.builder()
                 .firstName("Jane")
                 .lastName("Doe")
-                .dateOfBirth(LocalDate.of(1995, 5, 5))
+                .dateOfBirth(
+                        Date.from(
+                                LocalDate.of(1995, 5, 5)
+                                        .atStartOfDay(ZoneId.systemDefault())
+                                        .toInstant()
+                        )
+                )
                 .gender("F")
                 .build();
         Patient saved = patientRepository.save(patient);
 
-        mockMvc.perform(get("/patient/{id}", saved.getId()))
+        mockMvc.perform(get("/api/patients/{id}", saved.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", is("Jane")))
                 .andExpect(jsonPath("$.gender", is("F")));
@@ -86,13 +100,19 @@ class PatientControllerIntegrationTest {
         PatientDto dto = PatientDto.builder()
                 .firstName("Alice")
                 .lastName("Smith")
-                .dateOfBirth(LocalDate.of(2000, 1, 1))
+                .dateOfBirth(
+                        Date.from(
+                                LocalDate.of(2000, 1, 1)
+                                        .atStartOfDay(ZoneId.systemDefault())
+                                        .toInstant()
+                        )
+                )
                 .gender("F")
                 .address("456 Street")
                 .telephoneNumber("555-1234")
                 .build();
 
-        mockMvc.perform(post("/patient")
+        mockMvc.perform(post("/api/patients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated())
@@ -105,11 +125,17 @@ class PatientControllerIntegrationTest {
         PatientDto dto = PatientDto.builder()
                 .firstName("") // invalid
                 .lastName("")
-                .dateOfBirth(LocalDate.of(2025, 1, 1)) // future date invalid
+                .dateOfBirth(
+                        Date.from(
+                                LocalDate.of(2030, 1, 1)
+                                        .atStartOfDay(ZoneId.systemDefault())
+                                        .toInstant()
+                        )
+                )
                 .gender("X") // invalid
                 .build();
 
-        mockMvc.perform(post("/patient")
+        mockMvc.perform(post("/api/patients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isBadRequest())
@@ -121,7 +147,13 @@ class PatientControllerIntegrationTest {
         Patient patient = Patient.builder()
                 .firstName("Bob")
                 .lastName("Marley")
-                .dateOfBirth(LocalDate.of(1980, 2, 2))
+                .dateOfBirth(
+                        Date.from(
+                                LocalDate.of(1980, 2, 2)
+                                        .atStartOfDay(ZoneId.systemDefault())
+                                        .toInstant()
+                        )
+                )
                 .gender("M")
                 .build();
         Patient saved = patientRepository.save(patient);
@@ -129,11 +161,17 @@ class PatientControllerIntegrationTest {
         PatientDto dto = PatientDto.builder()
                 .firstName("Bobby")
                 .lastName("Marley")
-                .dateOfBirth(LocalDate.of(1980, 2, 2))
+                .dateOfBirth(
+                        Date.from(
+                                LocalDate.of(1980, 2, 2)
+                                        .atStartOfDay(ZoneId.systemDefault())
+                                        .toInstant()
+                        )
+                )
                 .gender("M")
                 .build();
 
-        mockMvc.perform(put("/patient/{id}", saved.getId())
+        mockMvc.perform(put("/api/patients/{id}", saved.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())

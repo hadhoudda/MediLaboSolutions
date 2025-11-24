@@ -2,7 +2,6 @@ package com.medilabosolutions.frontservice.controller;
 
 import com.medilabosolutions.frontservice.Beans.PatientBean;
 import com.medilabosolutions.frontservice.proxies.MicroservicePatientProxy;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,17 +37,17 @@ public class PatientController {
     }
 
     @GetMapping("/patients/register")
-    public String showRegisterForm() {
+    public String showRegisterForm(Model model) {
+        model.addAttribute("patient", new PatientBean());
         return "register";
     }
 
     @PostMapping("/patients/register")
-    public String registerPatient(@RequestBody PatientBean patientBean, Model model){
-        PatientBean patientRegister = patientProxy.createPatient(patientBean);
-        model.addAttribute("patient", patientRegister);
-        return "register";
+    public String savePatient(@ModelAttribute("patient") PatientBean patientBean) {
+        // sauvegarde le patient en base
+        PatientBean patient =patientProxy.createPatient(patientBean);
+        return "redirect:/patients";
     }
-
 
     @GetMapping("/patients/update/{id}")
     public String showEditForm(@PathVariable int id, Model model) {
@@ -57,13 +56,6 @@ public class PatientController {
         return "edit";
     }
 
-//    @PutMapping("/patients/update/{id}")
-//    public String editPatient(@PathVariable int id, @RequestBody PatientBean patientBean, Model model){
-//
-//        PatientBean patientEdit = patientProxy.updatePatient(id, patientBean);
-//        model.addAttribute("patient", patientEdit);
-//        return "edit";
-//    }
     @PostMapping("/patients/update/{id}")
     public String editPatient(@PathVariable int id,
                               @ModelAttribute PatientBean patientBean) {
