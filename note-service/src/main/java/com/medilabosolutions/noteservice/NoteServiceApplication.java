@@ -1,4 +1,4 @@
-package com.medilabosolutions.back_patient;
+package com.medilabosolutions.noteservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,11 +6,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class BackPatientApplication {
+public class NoteServiceApplication {
 
 	public static void main(String[] args) {
-
-		SpringApplication.run(BackPatientApplication.class, args);
+		SpringApplication.run(NoteServiceApplication.class, args);
 	}
 
 }

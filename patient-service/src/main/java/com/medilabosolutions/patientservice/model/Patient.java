@@ -30,7 +30,7 @@ public class Patient {
     private String lastName;
 
     @NotNull(message = "La date de naissance ne peut pas être nulle")
-    @Past(message = "La date de naissance doit être antérieure à la date d'aujourd'hui")
+    @Past(message = "La date de naissance ne peut pas être dans le futur.")
     @Column(name = "date_of_birth", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfBirth;
