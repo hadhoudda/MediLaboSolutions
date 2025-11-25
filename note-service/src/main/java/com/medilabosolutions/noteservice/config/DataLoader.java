@@ -28,7 +28,7 @@ public class DataLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         if (recreateDb){
-            log.warn("⚠ Suppression de toutes les notes !");
+            log.warn(" Suppression de toutes les notes !");
             noteRepository.deleteAll();
             InputStream inputStream = getClass().getResourceAsStream("/data/notes.json");
 

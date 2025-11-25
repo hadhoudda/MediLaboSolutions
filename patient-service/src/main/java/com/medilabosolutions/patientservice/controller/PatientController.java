@@ -7,6 +7,7 @@ import com.medilabosolutions.patientservice.model.Patient;
 import com.medilabosolutions.patientservice.service.contracts.IPatientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -15,12 +16,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/patients")
 @RequiredArgsConstructor
 public class PatientController {
 
-    private static final Logger logger = LogManager.getLogger(PatientController.class);
     private final IPatientService patientService;
     private final PatientMapper mapper;
 
@@ -29,7 +30,7 @@ public class PatientController {
         var patients = patientService.findAllPatients();
 
         if (patients.isEmpty()) {
-            logger.info("La liste des patients est vide.");
+            log.info("La liste des patients est vide.");
             return ResponseEntity.noContent().build();
         }
 

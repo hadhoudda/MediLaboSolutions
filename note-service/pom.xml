@@ -11,7 +11,7 @@
 	<groupId>com.medilabosolutions</groupId>
 	<artifactId>noteservice</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>notes-ervice</name>
+	<name>notes-service</name>
 	<description>Service Note microservice</description>
 	<url/>
 	<licenses>
