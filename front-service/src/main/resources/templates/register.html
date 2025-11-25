@@ -28,6 +28,12 @@
         <div class="mb-3">
             <label class="form-label">Date de naissance</label>
             <input type="date" class="form-control" th:field="*{dateOfBirth}" required>
+
+<!--            &lt;!&ndash; Message d’erreur &ndash;&gt;-->
+<!--            <div th:if="${param.error}" class="alert alert-danger py-2 text-center">-->
+<!--                date de naissance incorrect.-->
+<!--            </div>-->
+
         </div>
 
         <div class="mb-3">

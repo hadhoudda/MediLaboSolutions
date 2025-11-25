@@ -1,12 +1,16 @@
 package com.medilabosolutions.frontservice.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medilabosolutions.frontservice.Beans.PatientBean;
 import com.medilabosolutions.frontservice.proxies.MicroservicePatientProxy;
+import feign.FeignException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping
@@ -49,6 +53,7 @@ public class PatientController {
         return "redirect:/patients";
     }
 
+
     @GetMapping("/patients/update/{id}")
     public String showEditForm(@PathVariable int id, Model model) {
         PatientBean patient = patientProxy.getPatientById(id);
@@ -64,5 +69,6 @@ public class PatientController {
 
         return "redirect:/patients/" + id;
     }
+
 
 }
