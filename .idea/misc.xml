@@ -10,9 +10,9 @@
         <option value="$PROJECT_DIR$/discovery-serevice/pom.xml" />
         <option value="$PROJECT_DIR$/front-app/pom.xml" />
         <option value="$PROJECT_DIR$/discovery-service/pom.xml" />
-        <option value="$PROJECT_DIR$/front-service/pom.xml" />
-        <option value="$PROJECT_DIR$/patient-service/pom.xml" />
         <option value="$PROJECT_DIR$/note-service/pom.xml" />
+        <option value="$PROJECT_DIR$/patient-service/pom.xml" />
+        <option value="$PROJECT_DIR$/front-service/pom.xml" />
       </list>
     </option>
   </component>
