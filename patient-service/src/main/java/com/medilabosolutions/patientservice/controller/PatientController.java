@@ -44,7 +44,7 @@ public class PatientController {
         return ResponseEntity.ok(mapper.toDto(patient));
     }
 
-    @PostMapping("/register")
+    @PostMapping
     public ResponseEntity<PatientDto> createPatient(@Valid @RequestBody PatientDto dto) {
         Patient saved = patientService.addPatient(mapper.toEntity(dto));
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toDto(saved));
