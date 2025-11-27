@@ -23,7 +23,7 @@ import java.util.List;
 public class PatientController {
 
     private final IPatientService patientService;
-    private final PatientMapper mapper;
+    private final PatientMapper patientMapper;
 
     @GetMapping
     public ResponseEntity<List<PatientDto>> getAllPatients() {
@@ -34,7 +34,7 @@ public class PatientController {
             return ResponseEntity.noContent().build();
         }
 
-        return ResponseEntity.ok(mapper.toDtoList(patients));
+        return ResponseEntity.ok(patientMapper.toDtoList(patients));
     }
 
     @GetMapping("/{id}")
@@ -42,13 +42,13 @@ public class PatientController {
         Patient patient = patientService.findPatient(id)
                 .orElseThrow(() -> new PatientNotFoundException("Le patient avec l'id " + id + " n'existe pas"));
 
-        return ResponseEntity.ok(mapper.toDto(patient));
+        return ResponseEntity.ok(patientMapper.toDto(patient));
     }
 
     @PostMapping
     public ResponseEntity<PatientDto> createPatient(@Valid @RequestBody PatientDto dto) {
-        Patient saved = patientService.addPatient(mapper.toEntity(dto));
-        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toDto(saved));
+        Patient saved = patientService.addPatient(patientMapper.toEntity(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(patientMapper.toDto(saved));
     }
 
     @PutMapping("/{id}")
@@ -57,8 +57,8 @@ public class PatientController {
                 .orElseThrow(() -> new PatientNotFoundException("Le patient avec l'id " + id + " n'existe pas"));
 
         dto.setId(id);
-        Patient updated = patientService.updatePatient(mapper.toEntity(dto));
-        return ResponseEntity.ok(mapper.toDto(updated));
+        Patient updated = patientService.updatePatient(patientMapper.toEntity(dto));
+        return ResponseEntity.ok(patientMapper.toDto(updated));
     }
 
 }
