@@ -52,12 +52,12 @@ public class PatientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PatientDto> updatePatient(@PathVariable int id, @Valid @RequestBody PatientDto dto) throws PatientNotFoundException {
+    public ResponseEntity<PatientDto> updatePatient(@PathVariable int id, @Valid @RequestBody PatientDto patientDto) throws PatientNotFoundException {
         patientService.findPatient(id)
                 .orElseThrow(() -> new PatientNotFoundException("Le patient avec l'id " + id + " n'existe pas"));
 
-        dto.setId(id);
-        Patient updated = patientService.updatePatient(patientMapper.toEntity(dto));
+        patientDto.setId(id);
+        Patient updated = patientService.updatePatient(patientMapper.toEntity(patientDto));
         return ResponseEntity.ok(patientMapper.toDto(updated));
     }
 

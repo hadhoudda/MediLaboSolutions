@@ -9,11 +9,11 @@ public class AuthController {
 
     @GetMapping("/login")
     public String login() {
-        return "login"; // page Thymeleaf
+        return "login-page";
     }
 
     @PostMapping("/login")
     public String patients() {
-        return "redirect:/patients";
+        return "redirect:/patient-list";
     }
 }

@@ -29,7 +29,7 @@
         </a>
 
         <!-- FORMULAIRE DE MISE À JOUR -->
-        <form th:action="@{'/patients/update/' + ${patient.id}}" th:object="${patient}" method="post"
+        <form th:action="@{'/patients/' + ${patient.id} +'/edit'}" th:object="${patient}" method="post"
               class="card p-4 shadow-sm">
 
             <div class="mb-3">

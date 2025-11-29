@@ -2,6 +2,8 @@ package com.medilabosolutions.noteservice.controller;
 
 import com.medilabosolutions.noteservice.dto.ApiErrorResponse;
 import com.medilabosolutions.noteservice.dto.NoteDto;
+import com.medilabosolutions.noteservice.dto.NoteUpdateDto;
+import com.medilabosolutions.noteservice.exceptions.NoteNotFoundException;
 import com.medilabosolutions.noteservice.mapper.NoteMapper;
 import com.medilabosolutions.noteservice.model.Note;
 import com.medilabosolutions.noteservice.service.contracts.INoteService;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,11 +29,10 @@ public class NoteController {
     private final INoteService iNoteService;
     private final NoteMapper noteMapper;
 
-    //tous les notes pour un patient
-    @GetMapping("/{patId}")
+    // les notes pour un patient
+    @GetMapping("/patient/{patId}")
     public ResponseEntity<?> getAllNoteByPatientId(@PathVariable int patId,
-                                                   HttpServletRequest request
-    ) {
+                                                   HttpServletRequest request) {
 
         List<Note> noteList = iNoteService.findAllNoteByPatId(patId);
 
@@ -51,7 +53,7 @@ public class NoteController {
     }
 
     //ajout note pour un patient
-    @PostMapping
+    @PostMapping("/patient")
     public ResponseEntity<?> createNote(@Valid @RequestBody NoteDto noteDto,
                                         HttpServletRequest request) {
         try {
@@ -76,7 +78,84 @@ public class NoteController {
         }
     }
 
-    //modifie note pour un patient
+    // Modifier uniquement la note d’un patient
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateNotePatient(
+            @Valid @RequestBody NoteUpdateDto noteUpdateDto,
+            @PathVariable String id,
+            HttpServletRequest request) {
+
+        try {
+            Note existing = iNoteService.findNoteById(id)
+                    .orElseThrow(() -> new NoteNotFoundException("La note avec l'id " + id + " n'existe pas"));
+
+            // Mettre à jour uniquement le note et la date de mis à jour
+            existing.setNote(noteUpdateDto.getNote());
+            existing.setUpdatedNoteDate(Instant.now());
+            // Sauvegarde
+            Note updated = iNoteService.updateNote(id, noteUpdateDto.getNote());
+
+            log.info("Note modifiée avec succès pour le patient {}", updated.getPatId());
+
+            return ResponseEntity.ok(noteMapper.toDto(updated));
+
+        } catch (NoteNotFoundException e) {
+            ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .message(e.getMessage())
+                    .timestamp(LocalDateTime.now())
+                    .path(request.getRequestURI())
+                    .build();
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+
+        } catch (Exception e) {
+            ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                    .message("Impossible de modifier la note : " + e.getMessage())
+                    .timestamp(LocalDateTime.now())
+                    .path(request.getRequestURI())
+                    .build();
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    //supprime une note
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteNotePatient(@PathVariable String id,
+                                               HttpServletRequest request) {
+        try {
+            iNoteService.deleteNote(id);
+            log.info("Note avec id {} supprimée avec succès", id);
+
+            return ResponseEntity.ok("Note supprimée");
+
+        } catch (NoteNotFoundException e) {
+            log.error("Erreur suppression note : {}", e.getMessage());
+
+            ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .message(e.getMessage())
+                    .timestamp(LocalDateTime.now())
+                    .path(request.getRequestURI())
+                    .build();
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+
+        } catch (Exception e) {
+            log.error("Erreur serveur lors de la suppression de la note : {}", e.getMessage());
+
+            ApiErrorResponse errorResponse = ApiErrorResponse.builder()
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                    .message("Impossible de supprimer la note : " + e.getMessage())
+                    .timestamp(LocalDateTime.now())
+                    .path(request.getRequestURI())
+                    .build();
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
 
 
 

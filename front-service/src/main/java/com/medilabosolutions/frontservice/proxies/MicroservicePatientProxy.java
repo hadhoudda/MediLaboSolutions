@@ -20,4 +20,5 @@ public interface MicroservicePatientProxy {
 
     @PutMapping("/api/patients/{id}")
     void updatePatient(@PathVariable int id, @RequestBody PatientBean patientBean);
+
 }

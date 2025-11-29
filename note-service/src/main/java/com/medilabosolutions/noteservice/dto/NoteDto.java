@@ -20,7 +20,9 @@ import java.time.Instant;
 public class NoteDto {
 
     private String id;
+    @NotNull(message = "Le patId est obligatoire.")
     private Integer patId;
+    @NotBlank(message = "La note ne peut pas être vide.")
     private String note;
     @CreatedDate
     private Instant createdNoteDate;

@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
     public String handlePatientNotFound(PatientNotFoundException ex, Model model) {
         model.addAttribute("errorMessage", ex.getMessage());
         model.addAttribute("status", 404);
-        return "error"; // page Thymeleaf error.html
+        return "error"; // page Thymeleaf error-page.html
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

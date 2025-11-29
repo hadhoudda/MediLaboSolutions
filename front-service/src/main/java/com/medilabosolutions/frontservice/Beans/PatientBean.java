@@ -8,6 +8,7 @@ import java.util.Date;
 
 @Data
 public class PatientBean {
+
     private Integer id;
     private String firstName;
     private String lastName;
@@ -16,4 +17,5 @@ public class PatientBean {
     private String gender;
     private String address;
     private String telephoneNumber;
+
 }

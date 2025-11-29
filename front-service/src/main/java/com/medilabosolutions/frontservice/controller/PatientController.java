@@ -28,7 +28,7 @@ public class PatientController {
 
         List<PatientBean> patients = patientProxy.getListPatient();
         model.addAttribute("patients", patients);
-        return "patients";
+        return "patient-list";
     }
 
     // Détail patient (protégée)
@@ -37,16 +37,16 @@ public class PatientController {
 
         PatientBean patient = patientProxy.getPatientById(id);
         model.addAttribute("patient", patient);
-        return "patient";
+        return "patient-details";
     }
 
-    @GetMapping("/patients/register")
+    @GetMapping("/patients/add")
     public String showRegisterForm(Model model) {
         model.addAttribute("patient", new PatientBean());
-        return "register";
+        return "patient-create";
     }
 
-    @PostMapping("/patients/register")
+    @PostMapping("/patients/add")
     public String savePatient(@ModelAttribute("patient") PatientBean patientBean) {
         // sauvegarde le patient en base
         PatientBean patient =patientProxy.createPatient(patientBean);
@@ -54,14 +54,14 @@ public class PatientController {
     }
 
 
-    @GetMapping("/patients/update/{id}")
+    @GetMapping("/patients/{id}/edit")
     public String showEditForm(@PathVariable int id, Model model) {
         PatientBean patient = patientProxy.getPatientById(id);
         model.addAttribute("patient", patient);
-        return "edit";
+        return "patient-edit";
     }
 
-    @PostMapping("/patients/update/{id}")
+    @PostMapping("/patients/{id}/edit")
     public String editPatient(@PathVariable int id,
                               @ModelAttribute PatientBean patientBean) {
 

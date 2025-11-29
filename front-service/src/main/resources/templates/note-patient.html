@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Notes du patient</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous">
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+
+<body>
+
+<div class="container mt-4">
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <img th:src="@{/images/profil.jpeg}" alt="image de profil" class="header-image">
+
+        <h1 class="title mt-3">Note du patient</h1>
+
+        <!-- Bouton retour -->
+        <a th:href="@{/patients/{id}(id=${session.lastPatientId})}"
+           class="btn btn-secondary btn-lg shadow-sm">
+            <i class="bi bi-arrow-left-circle"></i> Retour
+        </a>
+
+        <!-- Bouton Ajouter note -->
+        <a th:href="@{'/patient/' + ${session.lastPatientId} + '/notes/add'}"  class="btn btn-pro btn-success" title="Ajouter note">
+            <i class="bi bi-plus-circle"></i> Ajouter une note
+        </a>
+
+        <!-- Bouton Déconnexion -->
+        <a th:href="@{/logout}" class="btn btn-logout ms-2" title="Déconnexion">
+            <i class="bi bi-box-arrow-right"></i> Déconnexion
+        </a>
+    </div>
+    <!-- Liste des notes -->
+    <div class="container mt-4">
+
+        <!-- Aucune note -->
+        <div th:if="${#lists.isEmpty(notes)}" class="alert alert-info text-center">
+            Ce patient n'a aucune note.
+        </div>
+
+        <!-- Notes -->
+        <div th:each="n, iterStat : ${notes}" class="card shadow-sm mb-4">
+
+            <div class="card-body">
+
+                <!-- Titre + Dates -->
+                <div class="d-flex justify-content-between">
+                    <h5 class="card-title">
+                        Note [[${iterStat.index + 1}]]
+                    </h5>
+
+                    <div class="d-flex align-items-center gap-2">
+
+                        <!-- Modifier Note -->
+                        <a th:href="@{'/patient/' + ${session.lastPatientId} + '/notes/edit/' + ${n.id}}"  class="btn btn-link text-danger p-0" title="Ajouter note">
+                            <i class="bi bi-pencil-square fs-5"></i>
+                        </a>
+                        <!-- Supprimer Note -->
+                        <form th:action="@{'/patient/' + ${session.lastPatientId} + '/notes/' + ${n.id}}" method="post"
+                              onsubmit="return confirm('Voulez-vous vraiment supprimer cette note ?');">
+                            <input type="hidden" name="_method" value="delete"/>
+                            <button type="submit" class="btn btn-link text-danger p-0">
+                                <i class="bi bi-trash fs-5"></i>
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+
+                <!-- Dates -->
+                <p class="text-muted mb-2" style="font-size: 0.85rem;">
+                    Créée le :
+                    [[${#temporals.format(n.createdNoteDate, 'dd/MM/yyyy HH:mm')}]]
+                    <span th:if="${n.updatedNoteDate != null
+                                 and n.updatedNoteDate != n.createdNoteDate}">
+                        — Modifiée le :
+                        [[${#temporals.format(n.updatedNoteDate, 'dd/MM/yyyy HH:mm')}]]
+                    </span>
+                </p>
+
+                <!-- Contenu note -->
+                <p class="card-text" th:text="${n.note}"></p>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Bootstrap JS -->
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous">
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+package com.medilabosolutions.frontservice.Beans;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+import java.time.Instant;
+
+@Data
+public class NoteBean {
+
+    private String id;
+    private Integer patId;
+    private String note;
+    private Instant createdNoteDate;
+    private Instant updatedNoteDate;
+
+}
