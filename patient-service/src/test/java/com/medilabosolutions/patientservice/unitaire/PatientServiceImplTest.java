@@ -27,32 +27,6 @@ class PatientServiceImplTest {
         patientService = new PatientServiceImpl(patientRepository);
     }
 
-    // Utilitaire pour convertir LocalDate → Date
-    private Date toDate(LocalDate localDate) {
-        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-    }
-
-    Patient patientTest1 = new Patient(
-            1,
-            "John",
-            "Doe",
-            toDate(LocalDate.of(1990, 1, 1)),
-            "M",
-            "Address1",
-            "123456"
-    );
-
-    Patient patientTest2 = new Patient(
-            2,
-            "Jane",
-            "Doe",
-            toDate(LocalDate.of(1995, 5, 5)),
-            "F",
-            "Address2",
-            "654321"
-    );
-
-
     @Test
     void testFindAllPatients() {
         Patient p1 = patientTest1;

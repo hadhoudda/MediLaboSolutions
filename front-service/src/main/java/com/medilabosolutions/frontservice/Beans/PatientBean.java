@@ -13,7 +13,7 @@ public class PatientBean {
     private String firstName;
     private String lastName;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
     private String gender;
     private String address;
     private String telephoneNumber;

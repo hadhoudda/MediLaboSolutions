@@ -78,13 +78,7 @@ class PatientControllerIntegrationTest {
         Patient patient = Patient.builder()
                 .firstName("Jane")
                 .lastName("Doe")
-                .dateOfBirth(
-                        Date.from(
-                                LocalDate.of(1995, 5, 5)
-                                        .atStartOfDay(ZoneId.systemDefault())
-                                        .toInstant()
-                        )
-                )
+                .dateOfBirth(LocalDate.of(1995, 5, 5))
                 .gender("F")
                 .build();
         Patient saved = patientRepository.save(patient);
@@ -100,13 +94,7 @@ class PatientControllerIntegrationTest {
         PatientDto dto = PatientDto.builder()
                 .firstName("Alice")
                 .lastName("Smith")
-                .dateOfBirth(
-                        Date.from(
-                                LocalDate.of(2000, 1, 1)
-                                        .atStartOfDay(ZoneId.systemDefault())
-                                        .toInstant()
-                        )
-                )
+                .dateOfBirth(LocalDate.of(2000, 1, 1))
                 .gender("F")
                 .address("456 Street")
                 .telephoneNumber("555-1234")
@@ -125,13 +113,7 @@ class PatientControllerIntegrationTest {
         PatientDto dto = PatientDto.builder()
                 .firstName("") // invalid
                 .lastName("")
-                .dateOfBirth(
-                        Date.from(
-                                LocalDate.of(2030, 1, 1)
-                                        .atStartOfDay(ZoneId.systemDefault())
-                                        .toInstant()
-                        )
-                )
+                .dateOfBirth(LocalDate.of(2030, 1, 1))
                 .gender("X") // invalid
                 .build();
 
@@ -147,13 +129,7 @@ class PatientControllerIntegrationTest {
         Patient patient = Patient.builder()
                 .firstName("Bob")
                 .lastName("Marley")
-                .dateOfBirth(
-                        Date.from(
-                                LocalDate.of(1980, 2, 2)
-                                        .atStartOfDay(ZoneId.systemDefault())
-                                        .toInstant()
-                        )
-                )
+                .dateOfBirth(LocalDate.of(1980, 2, 2))
                 .gender("M")
                 .build();
         Patient saved = patientRepository.save(patient);
@@ -161,13 +137,7 @@ class PatientControllerIntegrationTest {
         PatientDto dto = PatientDto.builder()
                 .firstName("Bobby")
                 .lastName("Marley")
-                .dateOfBirth(
-                        Date.from(
-                                LocalDate.of(1980, 2, 2)
-                                        .atStartOfDay(ZoneId.systemDefault())
-                                        .toInstant()
-                        )
-                )
+                .dateOfBirth(LocalDate.of(1980, 2, 2))
                 .gender("M")
                 .build();
 

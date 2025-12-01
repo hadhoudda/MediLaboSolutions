@@ -40,7 +40,7 @@
                         </tr>
                         <tr>
                             <th class="text-muted">Date de naissance</th>
-                            <td th:text="${#dates.format(patient.dateOfBirth, 'dd/MM/yyyy')}" class="fw-semibold"></td>
+                            <td th:text="${#temporals.format(patient.dateOfBirth, 'dd/MM/yyyy')}"></td>
                         </tr>
                         <tr>
                             <th class="text-muted">Genre</th>

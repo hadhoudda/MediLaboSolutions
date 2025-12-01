@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -27,7 +26,7 @@ public class PatientDto {
     @NotNull(message = "La date de naissance ne peut pas être nulle")
     @Past(message = "La date de naissance ne peut pas être dans le futur.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @NotBlank(message = "Le genre ne doit pas être vide")
     @Pattern(regexp = "^[MF]$", message = "Le genre doit être 'M' ou 'F'")

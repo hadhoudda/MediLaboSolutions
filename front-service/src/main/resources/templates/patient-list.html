@@ -50,15 +50,16 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="p : ${patients}" class="fw-semibold">
-                            <td th:text="${p.lastName}"></td>
-                            <td th:text="${p.firstName}"></td>
-                            <td th:text="${#dates.format(p.dateOfBirth, 'dd/MM/yyyy')}"></td>
-                            <td th:text="${p.gender}"></td>
-                            <td th:text="${p.address}"></td>
-                            <td th:text="${p.telephoneNumber}"></td>
+                        <tr th:each="patient : ${patients}" class="fw-semibold">
+                            <td th:text="${patient.lastName}"></td>
+                            <td th:text="${patient.firstName}"></td>
+                            <td th:text="${#temporals.format(patient.dateOfBirth, 'dd/MM/yyyy')}"></td>
+
+                            <td th:text="${patient.gender}"></td>
+                            <td th:text="${patient.address}"></td>
+                            <td th:text="${patient.telephoneNumber}"></td>
                             <td>
-                                <a th:href="@{/patients/{id}(id=${p.id})}" class="btn btn-outline-primary btn-sm">
+                                <a th:href="@{/patients/{id}(id=${patient.id})}" class="btn btn-outline-primary btn-sm">
                                     <i class="bi bi-eye"></i> Voir
                                 </a>
                             </td>

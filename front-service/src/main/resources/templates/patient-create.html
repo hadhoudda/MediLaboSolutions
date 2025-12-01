@@ -45,8 +45,7 @@
             <!-- Date de naissance -->
             <div class="mb-3">
                 <label class="form-label fw-semibold">Date de naissance</label>
-                <input type="date" class="form-control" th:field="*{dateOfBirth}" required
-                       th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                <input type="date" class="form-control" th:field="*{dateOfBirth}" required>
 
                 <!-- Message si date en futur -->
                 <div th:if="${param.error}" class="alert alert-danger py-2 mt-2 text-center">
