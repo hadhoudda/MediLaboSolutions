@@ -1,24 +1,20 @@
 package com.medilabosolutions.frontservice.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medilabosolutions.frontservice.Beans.PatientBean;
-import com.medilabosolutions.frontservice.proxies.MicroservicePatientProxy;
-import feign.FeignException;
+import com.medilabosolutions.frontservice.client.PatientGatewayClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping
 public class PatientController {
 
-    private final MicroservicePatientProxy patientProxy;
+    private final PatientGatewayClient patientProxy;
 
-    public PatientController(MicroservicePatientProxy patientProxy) {
+    public PatientController(PatientGatewayClient patientProxy) {
         this.patientProxy = patientProxy;
     }
 

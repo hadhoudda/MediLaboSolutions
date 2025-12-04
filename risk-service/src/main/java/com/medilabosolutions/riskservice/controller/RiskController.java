@@ -1,0 +1,67 @@
+package com.medilabosolutions.riskservice.controller;
+
+import com.medilabosolutions.riskservice.client.NoteClient;
+import com.medilabosolutions.riskservice.client.PatientClient;
+import com.medilabosolutions.riskservice.dto.NoteDto;
+import com.medilabosolutions.riskservice.dto.PatientDto;
+import com.medilabosolutions.riskservice.dto.RiskResponseDto;
+import com.medilabosolutions.riskservice.service.RiskAssessmentService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/risk")
+public class RiskController {
+
+    private final PatientClient patientClient;
+    private final NoteClient noteClient;
+    private final RiskAssessmentService riskAssessmentService;
+
+    public RiskController(
+            PatientClient patientClient,
+            NoteClient noteClient,
+            RiskAssessmentService riskAssessmentService) {
+
+        this.patientClient = patientClient;
+        this.noteClient = noteClient;
+        this.riskAssessmentService = riskAssessmentService;
+    }
+
+    @GetMapping("/patient/{id}")
+    public ResponseEntity<?> getRiskAssessmentPatient(@PathVariable int id) {
+        PatientDto patient;
+        try {
+            patient = patientClient.getPatientById(id);
+            if (patient == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Patient avec l'ID " + id + " non trouvé.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur lors de la récupération du patient : " + e.getMessage());
+        }
+
+        List<NoteDto> notes;
+        try {
+            notes = noteClient.getNotesByPatientId(id);
+            if (notes == null) {
+                notes = Collections.emptyList(); // Aucun note trouvé, on renvoie liste vide
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur lors de la récupération des notes : " + e.getMessage());
+        }
+
+        try {
+            RiskResponseDto response = riskAssessmentService.assessmentPatientRisk(patient, notes);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur lors de l'évaluation du risque : " + e.getMessage());
+        }
+    }
+}

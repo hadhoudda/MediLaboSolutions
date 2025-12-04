@@ -1,4 +1,4 @@
-package com.medilabosolutions.frontservice.proxies;
+package com.medilabosolutions.frontservice.client;
 
 import com.medilabosolutions.frontservice.Beans.PatientBean;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @FeignClient(name = "api-patient" )
-public interface MicroservicePatientProxy {
+public interface PatientGatewayClient {
 
     @GetMapping("/api/patients")
     List<PatientBean> getListPatient();

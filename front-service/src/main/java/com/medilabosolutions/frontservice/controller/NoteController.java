@@ -1,8 +1,7 @@
 package com.medilabosolutions.frontservice.controller;
 
 import com.medilabosolutions.frontservice.Beans.NoteBean;
-import com.medilabosolutions.frontservice.Beans.PatientBean;
-import com.medilabosolutions.frontservice.proxies.MicroserviceNoteProxy;
+import com.medilabosolutions.frontservice.client.NoteGatewayClient;
 import feign.FeignException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -15,10 +14,10 @@ import java.util.List;
 @RequestMapping
 public class NoteController {
 
-    private final MicroserviceNoteProxy noteProxy;
+    private final NoteGatewayClient noteProxy;
 
-    public NoteController(MicroserviceNoteProxy microserviceNoteProxy) {
-        this.noteProxy= microserviceNoteProxy;
+    public NoteController(NoteGatewayClient noteGatewayClient) {
+        this.noteProxy= noteGatewayClient;
     }
 
     // Liste des notes d'un patient (protégée)

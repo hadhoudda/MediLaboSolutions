@@ -1,14 +1,13 @@
-package com.medilabosolutions.frontservice.proxies;
+package com.medilabosolutions.frontservice.client;
 
 import com.medilabosolutions.frontservice.Beans.NoteBean;
-import com.medilabosolutions.frontservice.Beans.PatientBean;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @FeignClient(name = "api-note")
-public interface MicroserviceNoteProxy {
+public interface NoteGatewayClient {
 
     @GetMapping("/api/notes/patient/{patId}")
     List<NoteBean> getNotesByPatientId (@PathVariable("patId") int patId);
