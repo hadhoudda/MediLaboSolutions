@@ -1,0 +1,13 @@
+package com.medilabosolutions.riskservice;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class RiskResponseDtoAssessmentAssessmentServiceApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}

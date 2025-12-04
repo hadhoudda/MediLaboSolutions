@@ -54,13 +54,7 @@ class PatientControllerIntegrationTest {
         Patient patient = Patient.builder()
                 .firstName("John")
                 .lastName("Doe")
-                .dateOfBirth(
-                        Date.from(
-                                LocalDate.of(1990, 1, 1)
-                                        .atStartOfDay(ZoneId.systemDefault())
-                                        .toInstant()
-                        )
-                )
+                .dateOfBirth(LocalDate.of(1990, 1, 1))
                 .gender("M")
                 .address("123 Street")
                 .telephoneNumber("123456")

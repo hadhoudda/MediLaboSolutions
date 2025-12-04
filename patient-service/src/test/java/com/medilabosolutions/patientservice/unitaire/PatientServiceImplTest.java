@@ -29,12 +29,28 @@ class PatientServiceImplTest {
 
     @Test
     void testFindAllPatients() {
-        Patient p1 = patientTest1;
-        Patient p2 = patientTest2;
+        final Patient patient1 = new Patient(
+                1,
+                "John",
+                "Doe",
+                LocalDate.of(1990, 1, 1),
+                "M",
+                "Address1",
+                "123456"
+        );
+        final Patient patient2 = new Patient(
+                2,
+                "Jane",
+                "Doe",
+                LocalDate.of(1995, 5, 5),
+                "F",
+                "Address2",
+                "654321"
+        );
 
-        when(patientRepository.findAll()).thenReturn(Arrays.asList(p1, p2));
+        when(patientRepository.findAll()).thenReturn(Arrays.asList(patient1, patient2));
 
-        List<Patient> patients = patientService.findAllPatients();
+        final List<Patient> patients = patientService.findAllPatients();
 
         assertEquals(2, patients.size());
         verify(patientRepository, times(1)).findAll();
@@ -42,9 +58,17 @@ class PatientServiceImplTest {
 
     @Test
     void testFindPatient() {
-        Patient p = patientTest1;
+        final Patient patient = new Patient(
+            1,
+            "John",
+            "Doe",
+            LocalDate.of(1990, 1, 1),
+            "M",
+            "Address1",
+            "123456"
+    );
 
-        when(patientRepository.findById(1)).thenReturn(Optional.of(p));
+        when(patientRepository.findById(1)).thenReturn(Optional.of(patient));
 
         Optional<Patient> patientOpt = patientService.findPatient(1);
 
@@ -55,34 +79,49 @@ class PatientServiceImplTest {
 
     @Test
     void testAddPatient() {
-        Patient p = new Patient(
+        // GIVEN an existing patient
+
+        final Patient newPatient = new Patient(
                 null,
                 "John",
                 "Doe",
-                toDate(LocalDate.of(1990, 1, 1)),
+               LocalDate.of(1990, 1, 1),
                 "M",
                 "Address1",
                 "123456"
         );
 
-        Patient saved = patientTest1;
+        final Patient expectedResult = new Patient(
+            1,
+            "John",
+            "Doe",
+            LocalDate.of(1990, 1, 1),
+            "M",
+            "Address1",
+            "123456"
+    );
 
-        when(patientRepository.save(p)).thenReturn(saved);
+        // WHEN
+        when(patientRepository.save(any(Patient.class))).thenAnswer(invocation -> {
+            Patient patient = invocation.getArgument(0);
+            patient.setId(1);  // simulation de l'auto-génération de l'ID par JPA
+            return patient;
+        });
+        final Patient result = patientService.addPatient(newPatient);
 
-        Patient result = patientService.addPatient(p);
-
+        // THEN
         assertNotNull(result.getId());
         assertEquals(1, result.getId());
-        verify(patientRepository, times(1)).save(p);
+        verify(patientRepository, times(1)).save(newPatient);
     }
 
     @Test
     void testAddPatientWithIdShouldThrow() {
-        Patient p = new Patient(
+        Patient patient = new Patient(
                 10,
                 "John",
                 "Doe",
-                toDate(LocalDate.of(1990, 1, 1)),
+                LocalDate.of(1990, 1, 1),
                 "M",
                 "Address1",
                 "123456"
@@ -90,7 +129,7 @@ class PatientServiceImplTest {
 
         IllegalArgumentException ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> patientService.addPatient(p)
+                () -> patientService.addPatient(patient)
         );
 
         assertTrue(ex.getMessage().contains("Le patient ne doit pas avoir d'ID"));
@@ -99,7 +138,15 @@ class PatientServiceImplTest {
 
     @Test
     void testUpdatePatient() {
-        Patient p = patientTest1;
+        Patient p = new Patient(
+            1,
+            "John",
+            "Doe",
+            LocalDate.of(1990, 1, 1),
+            "M",
+            "Address1",
+            "123456"
+    );
 
         when(patientRepository.save(p)).thenReturn(p);
 
@@ -115,7 +162,7 @@ class PatientServiceImplTest {
                 null,
                 "John",
                 "Doe",
-                toDate(LocalDate.of(1990, 1, 1)),
+                LocalDate.of(1990, 1, 1),
                 "M",
                 "Address1",
                 "123456"

@@ -33,7 +33,7 @@ public class Patient {
     @Past(message = "La date de naissance ne peut pas être dans le futur.")
     @Column(name = "date_of_birth", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @NotBlank(message = "Le genre ne doit pas être vide")
     @Pattern(regexp = "^[MF]$", message = "Le genre doit être 'M' ou 'F'")
