@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -44,12 +45,14 @@ class PatientControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = "USER")
     void testGetAllPatients_emptyList() throws Exception {
         mockMvc.perform(get("/api/patients"))
                 .andExpect(status().isNoContent());
     }
 
     @Test
+    @WithMockUser(username = "user", roles = "USER")
     void testGetAllPatients_nonEmptyList() throws Exception {
         Patient patient = Patient.builder()
                 .firstName("John")
@@ -68,6 +71,7 @@ class PatientControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = "USER")
     void testGetPatientById_found() throws Exception {
         Patient patient = Patient.builder()
                 .firstName("Jane")
@@ -84,6 +88,7 @@ class PatientControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = "USER")
     void testCreatePatient_success() throws Exception {
         PatientDto dto = PatientDto.builder()
                 .firstName("Alice")
@@ -103,6 +108,7 @@ class PatientControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = "USER")
     void testCreatePatient_validationFail() throws Exception {
         PatientDto dto = PatientDto.builder()
                 .firstName("") // invalid
@@ -119,6 +125,7 @@ class PatientControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = "USER")
     void testUpdatePatient_success() throws Exception {
         Patient patient = Patient.builder()
                 .firstName("Bob")

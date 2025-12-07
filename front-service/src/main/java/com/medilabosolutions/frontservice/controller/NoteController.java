@@ -1,6 +1,7 @@
 package com.medilabosolutions.frontservice.controller;
 
 import com.medilabosolutions.frontservice.Beans.NoteBean;
+
 import com.medilabosolutions.frontservice.client.NoteGatewayClient;
 import feign.FeignException;
 import jakarta.servlet.http.HttpSession;
@@ -14,10 +15,10 @@ import java.util.List;
 @RequestMapping
 public class NoteController {
 
-    private final NoteGatewayClient noteProxy;
+    private final NoteGatewayClient noteGatewayClient;
 
     public NoteController(NoteGatewayClient noteGatewayClient) {
-        this.noteProxy= noteGatewayClient;
+        this.noteGatewayClient = noteGatewayClient;
     }
 
     // Liste des notes d'un patient (protégée)
@@ -28,7 +29,7 @@ public class NoteController {
         session.setAttribute("lastPatientId", patId);
 
         try {
-            List<NoteBean> notes = noteProxy.getNotesByPatientId(patId);
+            List<NoteBean> notes = noteGatewayClient.getNotesByPatientId(patId);
             model.addAttribute("notes", notes);
 
             if (notes.isEmpty()) {
@@ -56,7 +57,7 @@ public class NoteController {
     public String saveNote(@PathVariable int patId, @ModelAttribute("note") NoteBean noteBean) {
         noteBean.setPatId(patId);
         // sauvegarde le note
-        NoteBean note =noteProxy.createNote(noteBean);
+        NoteBean note = noteGatewayClient.createNote(noteBean);
         return "redirect:/patient/" + patId + "/notes";
     }
 
@@ -67,7 +68,7 @@ public class NoteController {
                                    Model model) {
 
         // Récupération de la list de note
-        List<NoteBean> notes = noteProxy.getNotesByPatientId(patId);
+        List<NoteBean> notes = noteGatewayClient.getNotesByPatientId(patId);
         // Filtre la note existante
         NoteBean note = notes.stream()
                 .filter(n -> n.getId().equals(id))
@@ -84,13 +85,13 @@ public class NoteController {
     public String editNote(@PathVariable int patId, @PathVariable String id,
                            @ModelAttribute("note") NoteBean noteBean) {
         noteBean.setPatId(patId); // s'assure que la note reste attachée au patient
-        noteProxy.updateNote(id, noteBean);
+        noteGatewayClient.updateNote(id, noteBean);
         return "redirect:/patient/" + patId + "/notes";
     }
 
     @PostMapping("/patient/{patId}/notes/{id}")
     public String deleteNote(@PathVariable int patId, @PathVariable String id) {
-        noteProxy.deleteNotePatientById(id);
+        noteGatewayClient.deleteNotePatientById(id);
         return "redirect:/patient/" + patId + "/notes";
     }
 

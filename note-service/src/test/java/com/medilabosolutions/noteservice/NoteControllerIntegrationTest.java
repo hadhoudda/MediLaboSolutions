@@ -10,7 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -20,6 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class NoteControllerIntegrationTest {
 
@@ -53,6 +56,7 @@ public class NoteControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = "USER")
     void testGetAllNotesByPatientId() throws Exception {
         mockMvc.perform(get("/api/notes/patient/{patId}", 1))
                 .andExpect(status().isOk())
@@ -60,6 +64,7 @@ public class NoteControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = "USER")
     void testCreateNote() throws Exception {
         NoteDto noteDto = new NoteDto();
         noteDto.setPatId(2);
@@ -73,6 +78,7 @@ public class NoteControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = "USER")
     void testUpdateNote() throws Exception {
         String updatedText = "Note mise à jour";
 
@@ -84,6 +90,7 @@ public class NoteControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = "USER")
     void testDeleteNote() throws Exception {
         mockMvc.perform(delete("/api/notes/{id}", testNote.getId()))
                 .andExpect(status().isOk())
@@ -91,6 +98,7 @@ public class NoteControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = "USER")
     void testGetNotesForNonExistingPatient() throws Exception {
         mockMvc.perform(get("/api/notes/patient/{patId}", 999))
                 .andExpect(status().isNotFound())

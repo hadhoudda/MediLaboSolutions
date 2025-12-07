@@ -5,7 +5,7 @@ import com.medilabosolutions.riskservice.client.PatientClient;
 import com.medilabosolutions.riskservice.dto.NoteDto;
 import com.medilabosolutions.riskservice.dto.PatientDto;
 import com.medilabosolutions.riskservice.dto.RiskResponseDto;
-import com.medilabosolutions.riskservice.service.RiskAssessmentService;
+import com.medilabosolutions.riskservice.service.RiskAssessmentServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,16 +19,16 @@ public class RiskController {
 
     private final PatientClient patientClient;
     private final NoteClient noteClient;
-    private final RiskAssessmentService riskAssessmentService;
+    private final RiskAssessmentServiceImpl riskAssessmentService;
 
     public RiskController(
             PatientClient patientClient,
             NoteClient noteClient,
-            RiskAssessmentService riskAssessmentService) {
+            RiskAssessmentServiceImpl riskAssessmentServiceImpl) {
 
         this.patientClient = patientClient;
         this.noteClient = noteClient;
-        this.riskAssessmentService = riskAssessmentService;
+        this.riskAssessmentService = riskAssessmentServiceImpl;
     }
 
     @GetMapping("/patient/{id}")

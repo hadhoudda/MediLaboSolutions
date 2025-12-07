@@ -1,12 +1,14 @@
 package com.medilabosolutions.frontservice.client;
 
 import com.medilabosolutions.frontservice.Beans.NoteBean;
+import com.medilabosolutions.frontservice.config.FeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "api-note")
+@FeignClient(name = "api-note",
+        configuration = FeignConfig.class)
 public interface NoteGatewayClient {
 
     @GetMapping("/api/notes/patient/{patId}")

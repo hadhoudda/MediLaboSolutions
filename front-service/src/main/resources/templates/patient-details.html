@@ -63,12 +63,22 @@
 
         <!-- Boutons d'action -->
         <div class="col-md-4 d-flex flex-column gap-3">
+            <div class="alert alert-danger d-flex align-items-center p-3 shadow-sm" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-3 fs-3"></i>
+                <div>
+                    <strong>Niveau de risque :</strong> <span th:text="${risk.riskLevel}">Non disponible</span>
+                </div>
+            </div>
+
+
             <a th:href="@{/patient/{id}/notes(id=${patient.id})}" class="btn btn-outline-primary btn-lg w-100 shadow-sm">
-                <i class="bi bi-journal-text me-2"></i> Notes
+                <i class="bi bi-journal-text me-2"></i> Consulter les notes
             </a>
+
             <a th:href="@{'/patients/' + ${patient.id} + '/edit'}" class="btn btn-success btn-lg w-100 text-white shadow-sm">
-                <i class="bi bi-pencil-square me-2"></i> Mises à jour
+                <i class="bi bi-pencil-square me-2"></i> Modifier les informations
             </a>
+
             <a th:href="@{/patients}" class="btn btn-secondary btn-lg w-100 shadow-sm">
                 <i class="bi bi-arrow-left-circle me-2"></i> Retour
             </a>

@@ -4,6 +4,7 @@ import com.medilabosolutions.riskservice.dto.NoteDto;
 import com.medilabosolutions.riskservice.dto.PatientDto;
 import com.medilabosolutions.riskservice.dto.RiskResponseDto;
 import com.medilabosolutions.riskservice.enums.RiskAssessment;
+import com.medilabosolutions.riskservice.service.contracts.IRiskAssessementService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ import static com.medilabosolutions.riskservice.model.RiskTerms.listRisks;
 
 @Slf4j
 @Service
-public class RiskAssessmentService {
+public class RiskAssessmentServiceImpl implements IRiskAssessementService {
 
     private static final int AGE_THRESHOLD = 30;
 
