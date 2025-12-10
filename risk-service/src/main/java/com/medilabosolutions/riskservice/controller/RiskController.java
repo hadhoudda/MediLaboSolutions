@@ -33,6 +33,7 @@ public class RiskController {
 
     @GetMapping("/patient/{id}")
     public ResponseEntity<?> getRiskAssessmentPatient(@PathVariable int id) {
+
         PatientDto patient;
         try {
             patient = patientClient.getPatientById(id);
@@ -44,24 +45,34 @@ public class RiskController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erreur lors de la récupération du patient : " + e.getMessage());
         }
-
         List<NoteDto> notes;
+
         try {
             notes = noteClient.getNotesByPatientId(id);
+
+            // Sécurité si null
             if (notes == null) {
-                notes = Collections.emptyList(); // Aucun note trouvé, on renvoie liste vide
+                notes = Collections.emptyList();
             }
+
+        } catch (feign.FeignException.NotFound e) {
+            // liste vide
+            notes = Collections.emptyList();
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erreur lors de la récupération des notes : " + e.getMessage());
         }
 
+        // --- Risk calculation ---
         try {
             RiskResponseDto response = riskAssessmentService.assessmentPatientRisk(patient, notes);
             return ResponseEntity.ok(response);
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erreur lors de l'évaluation du risque : " + e.getMessage());
         }
     }
+
 }

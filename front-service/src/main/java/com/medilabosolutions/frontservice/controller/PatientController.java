@@ -34,22 +34,26 @@ public class PatientController {
         return "patient-list";
     }
 
-    // Détail patient (protégée)
     @GetMapping("/patients/{id}")
     public String getPatientDetails(@PathVariable int id, Model model) {
+
         PatientBean patient = patientGatewayClient.getPatientById(id);
 
         RiskBean risk = riskGatewayClient.getRiskPatient(id);
 
+        // Par sécurité si l’objet revient null
         if (risk == null) {
             risk = new RiskBean();
-            risk.setRiskLevel("Non disponible");
+            risk.setRiskLevel("None");
         }
 
+        // Si le service renvoie déjà NONE, rien à changer
         model.addAttribute("patient", patient);
         model.addAttribute("risk", risk);
+
         return "patient-details";
     }
+
 
 
     @GetMapping("/patients/add")
