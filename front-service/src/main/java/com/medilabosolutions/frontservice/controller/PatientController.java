@@ -64,7 +64,7 @@ public class PatientController {
                               BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()){
-            return "/patients/add";
+            return "patient-create";
         }
         // sauvegarde le patient en base
         PatientBean patient = patientGatewayClient.createPatient(patientBean);
@@ -81,10 +81,15 @@ public class PatientController {
 
     @PostMapping("/patients/{id}/edit")
     public String editPatient(@PathVariable int id,
-                              @ModelAttribute PatientBean patientBean) {
+                              @Valid @ModelAttribute("patient") PatientBean patientBean,
+                              BindingResult bindingResult) {
 
+        if(bindingResult.hasErrors()){
+            return "patient-edit";
+        }
+
+        // mise a jour de patient en base
         patientGatewayClient.updatePatient(id, patientBean);
-
         return "redirect:/patients/" + id;
     }
 
