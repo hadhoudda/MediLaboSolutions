@@ -8,4 +8,5 @@ public class RiskBean {
     private Integer patientId;
     private Integer age;
     private String riskLevel;
+
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "api-note",
+@FeignClient(name = "note-service",
         configuration = FeignConfig.class)
 public interface NoteClient {
 

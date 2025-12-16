@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "api-risk",
+@FeignClient(name = "risk-service",
         configuration = FeignConfig.class)
 public interface RiskGatewayClient {
 

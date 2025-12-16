@@ -18,7 +18,7 @@ public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_patient")
+    @Column(name = "id")
     private Integer id;
 
     @NotBlank(message = "Le prénom ne doit pas être vide")

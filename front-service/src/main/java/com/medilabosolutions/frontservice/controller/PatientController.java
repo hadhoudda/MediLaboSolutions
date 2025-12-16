@@ -4,8 +4,10 @@ import com.medilabosolutions.frontservice.Beans.PatientBean;
 import com.medilabosolutions.frontservice.Beans.RiskBean;
 import com.medilabosolutions.frontservice.client.PatientGatewayClient;
 import com.medilabosolutions.frontservice.client.RiskGatewayClient;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,8 +25,6 @@ public class PatientController {
 
     private final RiskGatewayClient riskGatewayClient;
 
-
-
     // Liste des patients (protégée)
     @GetMapping("/patients")
     public String listPatients(Model model) {
@@ -41,7 +41,6 @@ public class PatientController {
 
         RiskBean risk = riskGatewayClient.getRiskPatient(id);
 
-        // Par sécurité si l’objet revient null
         if (risk == null) {
             risk = new RiskBean();
             risk.setRiskLevel("None");
@@ -54,8 +53,6 @@ public class PatientController {
         return "patient-details";
     }
 
-
-
     @GetMapping("/patients/add")
     public String showRegisterForm(Model model) {
         model.addAttribute("patient", new PatientBean());
@@ -63,7 +60,12 @@ public class PatientController {
     }
 
     @PostMapping("/patients/add")
-    public String savePatient(@ModelAttribute("patient") PatientBean patientBean) {
+    public String savePatient(@Valid @ModelAttribute("patient") PatientBean patientBean,
+                              BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()){
+            return "/patients/add";
+        }
         // sauvegarde le patient en base
         PatientBean patient = patientGatewayClient.createPatient(patientBean);
         return "redirect:/patients";

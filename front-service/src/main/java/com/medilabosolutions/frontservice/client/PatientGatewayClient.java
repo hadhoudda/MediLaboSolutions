@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "api-patient",
+@FeignClient(name = "patient-service",
         configuration = FeignConfig.class)
 public interface PatientGatewayClient {
 
