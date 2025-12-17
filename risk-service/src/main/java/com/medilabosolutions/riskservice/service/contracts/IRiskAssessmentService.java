@@ -6,8 +6,10 @@ import com.medilabosolutions.riskservice.dto.RiskResponseDto;
 
 import java.util.List;
 
-public interface IRiskAssessementService {
+public interface IRiskAssessmentService {
 
     RiskResponseDto assessmentPatientRisk(PatientDto patient, List<NoteDto> notes);
+
     String assessmentRisk(PatientDto patient, List<NoteDto> notes);
+
 }

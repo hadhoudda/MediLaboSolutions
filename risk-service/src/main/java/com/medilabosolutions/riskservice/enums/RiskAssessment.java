@@ -1,11 +1,8 @@
 package com.medilabosolutions.riskservice.enums;
 
-//public enum RiskAssessment {
-//    RISK_1,
-//    RISK_2,
-//    RISK_3,
-//    RISK_4
-//}
+import lombok.Getter;
+
+@Getter
 public enum RiskAssessment {
     RISK_1("None"),
     RISK_2("Borderline"),
@@ -18,7 +15,4 @@ public enum RiskAssessment {
         this.label = label;
     }
 
-    public String getLabel() {
-        return label;
-    }
 }

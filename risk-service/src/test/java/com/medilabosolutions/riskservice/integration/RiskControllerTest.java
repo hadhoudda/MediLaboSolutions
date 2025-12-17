@@ -21,6 +21,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Integration tests for RiskController using Mockito.
+ * <p>
+ * Tests various scenarios for retrieving patient risk assessments,
+ * including successful retrieval, patient not found, null notes,
+ * and service errors.
+ */
 @ExtendWith(MockitoExtension.class)
 class RiskControllerTest {
 
@@ -36,11 +43,14 @@ class RiskControllerTest {
     @InjectMocks
     RiskController controller;
 
-    PatientDto patient;
+    private PatientDto patient;
 
+    /**
+     * Setup common test data before each test.
+     */
     @BeforeEach
     void setup() {
-
+        // Create a sample patient for testing
         patient = new PatientDto(
                 1,
                 "John",
@@ -50,13 +60,15 @@ class RiskControllerTest {
         );
     }
 
+    /**
+     * Test successful risk assessment retrieval.
+     */
     @Test
     void testGetRiskAssessmentPatient_success() {
         // GIVEN
         List<NoteDto> notes = List.of(
                 new NoteDto("1", 1, "smoker", null, null)
         );
-
         RiskResponseDto risk = new RiskResponseDto(1, 44, "Borderline");
 
         when(patientClient.getPatientById(1)).thenReturn(patient);
@@ -71,6 +83,9 @@ class RiskControllerTest {
         assertEquals(risk, response.getBody());
     }
 
+    /**
+     * Test scenario where the patient is not found.
+     */
     @Test
     void testGetRiskAssessmentPatient_patientNotFound() {
         when(patientClient.getPatientById(1)).thenReturn(null);
@@ -81,6 +96,9 @@ class RiskControllerTest {
         assertTrue(response.getBody().toString().contains("non trouvé"));
     }
 
+    /**
+     * Test scenario where the patient client throws an exception.
+     */
     @Test
     void testGetRiskAssessmentPatient_patientClientError() {
         when(patientClient.getPatientById(1)).thenThrow(new RuntimeException("Erreur"));
@@ -91,6 +109,9 @@ class RiskControllerTest {
         assertTrue(response.getBody().toString().contains("Erreur lors de la récupération du patient"));
     }
 
+    /**
+     * Test scenario where notes are null (should be treated as empty list).
+     */
     @Test
     void testGetRiskAssessmentPatient_notesNull() {
         when(patientClient.getPatientById(1)).thenReturn(patient);
@@ -107,6 +128,9 @@ class RiskControllerTest {
         assertEquals(expected, response.getBody());
     }
 
+    /**
+     * Test scenario where the note client throws an exception.
+     */
     @Test
     void testGetRiskAssessmentPatient_notesError() {
         when(patientClient.getPatientById(1)).thenReturn(patient);
@@ -118,6 +142,9 @@ class RiskControllerTest {
         assertTrue(response.getBody().toString().contains("Erreur lors de la récupération des notes"));
     }
 
+    /**
+     * Test scenario where the risk service throws an exception.
+     */
     @Test
     void testGetRiskAssessmentPatient_riskServiceError() {
         when(patientClient.getPatientById(1)).thenReturn(patient);

@@ -5,7 +5,6 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 public class PatientBean {
@@ -13,7 +12,7 @@ public class PatientBean {
     private Integer id;
     private String firstName;
     private String lastName;
-    @Past(message = "La date de naissance doit être dans le passé")
+    @Past(message = "La date de naissance ne peut pas être dans le futur")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
     private String gender;

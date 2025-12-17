@@ -13,6 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * REST controller responsible for calculating and returning patient risk assessments.
+ * <p>
+ * This controller fetches patient information and clinical notes from external services
+ * using Feign clients, and then delegates the risk calculation to {@link RiskAssessmentServiceImpl}.
+ */
 @RestController
 @RequestMapping("/api/risk")
 public class RiskController {
@@ -21,6 +27,13 @@ public class RiskController {
     private final NoteClient noteClient;
     private final RiskAssessmentServiceImpl riskAssessmentService;
 
+    /**
+     * Constructor for dependency injection of clients and service.
+     *
+     * @param patientClient           Feign client to fetch patient data
+     * @param noteClient              Feign client to fetch patient notes
+     * @param riskAssessmentServiceImpl Service for risk assessment calculation
+     */
     public RiskController(
             PatientClient patientClient,
             NoteClient noteClient,
@@ -31,37 +44,48 @@ public class RiskController {
         this.riskAssessmentService = riskAssessmentServiceImpl;
     }
 
+    /**
+     * GET endpoint to retrieve risk assessment for a patient by ID.
+     * <p>
+     * It fetches the patient information and clinical notes, handles errors gracefully,
+     * and calculates the risk based on predefined rules.
+     *
+     * @param id The ID of the patient
+     * @return ResponseEntity containing the {@link RiskResponseDto} or an error message
+     */
     @GetMapping("/patient/{id}")
     public ResponseEntity<?> getRiskAssessmentPatient(@PathVariable int id) {
 
         PatientDto patient;
         try {
+
             patient = patientClient.getPatientById(id);
             if (patient == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Patient avec l'ID " + id + " non trouvé.");
+                        .body("Patient with ID " + id + " not found.");
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erreur lors de la récupération du patient : " + e.getMessage());
+                    .body("Error fetching patient data: " + e.getMessage());
         }
-        List<NoteDto> notes;
 
+        List<NoteDto> notes;
         try {
+
             notes = noteClient.getNotesByPatientId(id);
 
-            // Sécurité si null
+            // Safety check if notes are null
             if (notes == null) {
                 notes = Collections.emptyList();
             }
 
         } catch (feign.FeignException.NotFound e) {
-            // liste vide
+            // If notes not found, use empty list
             notes = Collections.emptyList();
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erreur lors de la récupération des notes : " + e.getMessage());
+                    .body("Error fetching patient notes: " + e.getMessage());
         }
 
         // --- Risk calculation ---
@@ -71,7 +95,7 @@ public class RiskController {
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erreur lors de l'évaluation du risque : " + e.getMessage());
+                    .body("Error during risk assessment: " + e.getMessage());
         }
     }
 

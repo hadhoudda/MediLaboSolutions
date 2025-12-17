@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,8 +18,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.Instant;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-        import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Integration tests for the NoteController.
+ *
+ * <p>Tests the API endpoints for retrieving, creating, updating, and deleting notes.
+ * Uses MockMvc with a mock security context for authentication.</p>
+ */
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
@@ -37,6 +42,10 @@ public class NoteControllerIntegrationTest {
 
     private Note testNote;
 
+    /**
+     * Set up the database before each test.
+     * Creates a sample note for testing.
+     */
     @BeforeEach
     void setUp() {
         noteRepository.deleteAll();
@@ -50,11 +59,18 @@ public class NoteControllerIntegrationTest {
         testNote = noteRepository.save(testNote);
     }
 
+    /**
+     * Clean up the database after each test.
+     */
     @AfterEach
     void tearDown() {
         noteRepository.deleteAll();
     }
 
+    /**
+     * Test retrieving all notes for an existing patient.
+     * Expects HTTP 200 and the correct note content.
+     */
     @Test
     @WithMockUser(username = "user", roles = "USER")
     void testGetAllNotesByPatientId() throws Exception {
@@ -63,6 +79,10 @@ public class NoteControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].note").value("Note de test"));
     }
 
+    /**
+     * Test creating a new note for a patient.
+     * Expects HTTP 201 and the correct note content in the response.
+     */
     @Test
     @WithMockUser(username = "user", roles = "USER")
     void testCreateNote() throws Exception {
@@ -77,6 +97,10 @@ public class NoteControllerIntegrationTest {
                 .andExpect(jsonPath("$.note").value("Nouvelle note"));
     }
 
+    /**
+     * Test updating an existing note.
+     * Expects HTTP 200 and the updated note content.
+     */
     @Test
     @WithMockUser(username = "user", roles = "USER")
     void testUpdateNote() throws Exception {
@@ -89,19 +113,29 @@ public class NoteControllerIntegrationTest {
                 .andExpect(jsonPath("$.note").value(updatedText));
     }
 
+    /**
+     * Test deleting an existing note.
+     * Expects HTTP 200 and confirmation message.
+     */
     @Test
     @WithMockUser(username = "user", roles = "USER")
     void testDeleteNote() throws Exception {
         mockMvc.perform(delete("/api/notes/{id}", testNote.getId()))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Note supprimée"));
+                .andExpect(content().string("Note deleted"));
     }
 
+    /**
+     * Test retrieving notes for a non-existing patient.
+     * Expects HTTP 404 with appropriate error message.
+     */
     @Test
     @WithMockUser(username = "user", roles = "USER")
     void testGetNotesForNonExistingPatient() throws Exception {
         mockMvc.perform(get("/api/notes/patient/{patId}", 999))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Aucune note trouvée pour le patient avec l'id : 999 ou le patient n'existe pas."));
+                .andExpect(jsonPath("$.message")
+                        .value("No notes found for patient with id: 999 or patient does not exist."));
     }
+
 }

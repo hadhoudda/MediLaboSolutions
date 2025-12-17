@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: note-service
+  server:
+    port: 8082
+  data:
+    mongodb:
+      host: mongodb
+      port: 27017
+      database: notemedilabo_db
+      uri: mongodb://mongodb:27017/notemedilabo_db
+  cloud:
+    config:
+      enabled: false         # Disable Spring Cloud Config Server
+    discovery:
+      enabled: true          # Enable service discovery
+
+# Logging configuration
+logging:
+  level:
+    root: INFO
+    com.medilabosolutions: DEBUG
+  file:
+    name: logs/application.log   # Log file location
+
+# Eureka configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka/
+    register-with-eureka: true       # Register this service with Eureka
+    fetch-registry: true             # Fetch registry from Eureka
+  instance:
+    prefer-ip-address: true          # Prefer IP address instead of hostname
+
+# Custom application properties
+application:
+  database:
+    recreate: true        # Whether to recreate the database on startup

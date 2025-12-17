@@ -1,0 +1,35 @@
+# Spring Boot application name and Cloud Config
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    config:
+      enabled: false             # Disable Config Server
+    discovery:
+      enabled: true              # Enable service discovery
+    gateway:
+      discovery:
+        locator:
+          enabled: true                # Enable dynamic routing based on discovered services
+          lower-case-service-id: true # Convert service IDs to lowercase
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true                # Enable service discovery for WebFlux routes
+              lower-case-service-id: true # Convert service IDs to lowercase
+
+# Server configuration
+server:
+  port: 8888
+
+# Eureka configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka/
+    register-with-eureka: true    # Register this gateway with Eureka
+    fetch-registry: true          # Fetch registry from Eureka to discover other services
+  instance:
+    prefer-ip-address: true       # Prefer IP address instead of hostname
+

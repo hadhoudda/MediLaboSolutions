@@ -7,12 +7,22 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.List;
-
-@FeignClient(name = "risk-service",
-        configuration = FeignConfig.class)
+/**
+ * Feign client used to communicate with the Risk microservice.
+ * Provides operations to retrieve risk assessment for a patient.
+ */
+@FeignClient(
+        name = "risk-service",
+        configuration = FeignConfig.class
+)
 public interface RiskGatewayClient {
 
+    /**
+     * Retrieves the risk assessment for a given patient.
+     *
+     * @param id the patient identifier
+     * @return the patient's risk assessment
+     */
     @GetMapping("/api/risk/patient/{id}")
     RiskBean getRiskPatient(@PathVariable("id") int id);
 

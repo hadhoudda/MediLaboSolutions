@@ -12,36 +12,73 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of the INoteService interface.
+ *
+ * <p>Provides CRUD operations for Notes, including retrieval by patient,
+ * creation, update, and deletion. Handles NoteNotFoundException when a note
+ * does not exist.</p>
+ */
 @Slf4j
 @Service
 public class NoteServiceImpl implements INoteService {
 
     private final NoteRepository noteRepository;
 
+    /**
+     * Constructor injection of NoteRepository.
+     *
+     * @param noteRepository repository for Note entities
+     */
     public NoteServiceImpl(NoteRepository noteRepository) {
         this.noteRepository = noteRepository;
     }
 
-
+    /**
+     * Finds all notes for a given patient, ordered by updated date descending.
+     *
+     * @param patId patient ID
+     * @return list of notes for the patient
+     */
     public List<Note> findAllNoteByPatId(Integer patId) {
         return noteRepository.findByPatIdOrderByUpdatedNoteDateDesc(patId);
     }
 
+    /**
+     * Finds a note by its ID.
+     *
+     * @param id note ID
+     * @return Optional containing the note if found
+     */
     @Override
     public Optional<Note> findNoteById(String id) {
         return noteRepository.findById(id);
     }
 
+    /**
+     * Adds a new note to the database.
+     *
+     * @param note note entity to create (ID must be null)
+     * @return created note
+     */
     @Override
     public Note addNote(Note note) {
-        Assert.isTrue(note.getId() == null, "Le note ne doit pas avoir d'ID lors de la création");
+        Assert.isTrue(note.getId() == null, "The note must not have an ID when creating");
         return noteRepository.save(note);
     }
 
+    /**
+     * Updates an existing note's content and updated timestamp.
+     *
+     * @param id      note ID
+     * @param newNote new note content
+     * @return updated note
+     * @throws NoteNotFoundException if the note does not exist
+     */
     @Override
     public Note updateNote(String id, String newNote) throws NoteNotFoundException {
         Note existing = noteRepository.findById(id)
-                .orElseThrow(() -> new NoteNotFoundException("La note avec l'id " + id + " n'existe pas"));
+                .orElseThrow(() -> new NoteNotFoundException("Note with id " + id + " does not exist"));
 
         existing.setNote(newNote);
         existing.setUpdatedNoteDate(Instant.now());
@@ -49,14 +86,18 @@ public class NoteServiceImpl implements INoteService {
         return noteRepository.save(existing);
     }
 
-
+    /**
+     * Deletes a note by its ID.
+     *
+     * @param id note ID
+     * @throws NoteNotFoundException if the note does not exist
+     */
     @Override
     public void deleteNote(String id) throws NoteNotFoundException {
         Note existing = noteRepository.findById(id)
-                .orElseThrow(() -> new NoteNotFoundException("La note avec l'id " + id + " n'existe pas"));
+                .orElseThrow(() -> new NoteNotFoundException("Note with id " + id + " does not exist"));
 
         noteRepository.delete(existing);
-        log.info("Note supprimée avec succès (id={})", id);
+        log.info("Note successfully deleted (id={})", id);
     }
-
 }

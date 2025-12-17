@@ -30,4 +30,5 @@ public class Note {
 
     @LastModifiedDate
     private Instant updatedNoteDate;
+
 }

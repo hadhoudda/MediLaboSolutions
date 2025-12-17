@@ -19,7 +19,12 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
+/**
+ * REST controller for managing Notes.
+ *
+ * <p>Provides endpoints to create, retrieve, update, and delete notes for patients.
+ * Handles error responses consistently with ApiErrorResponse objects.</p>
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/notes")
@@ -29,7 +34,13 @@ public class NoteController {
     private final INoteService iNoteService;
     private final NoteMapper noteMapper;
 
-    // les notes pour un patient
+    /**
+     * Retrieves all notes for a specific patient.
+     *
+     * @param patId   Patient ID
+     * @param request HttpServletRequest for error path
+     * @return List of notes or error response if none found
+     */
     @GetMapping("/patient/{patId}")
     public ResponseEntity<?> getAllNoteByPatientId(@PathVariable int patId,
                                                    HttpServletRequest request) {
@@ -37,11 +48,11 @@ public class NoteController {
         List<Note> noteList = iNoteService.findAllNoteByPatId(patId);
 
         if (noteList.isEmpty()) {
-            log.info("Aucune note trouvée pour le patient {}", patId);
+            log.info("No notes found for patient {}", patId);
 
             ApiErrorResponse error = ApiErrorResponse.builder()
                     .status(HttpStatus.NOT_FOUND.value())
-                    .message("Aucune note trouvée pour le patient avec l'id : " + patId + " ou le patient n'existe pas.")
+                    .message("No notes found for patient with id: " + patId + " or patient does not exist.")
                     .timestamp(LocalDateTime.now())
                     .path(request.getRequestURI())
                     .build();
@@ -52,24 +63,29 @@ public class NoteController {
         return ResponseEntity.ok(noteMapper.toDtoList(noteList));
     }
 
-    //ajout note pour un patient
+    /**
+     * Creates a new note for a patient.
+     *
+     * @param noteDto Note DTO to create
+     * @param request HttpServletRequest for error path
+     * @return Created note or error response
+     */
     @PostMapping("/patient")
     public ResponseEntity<?> createNote(@Valid @RequestBody NoteDto noteDto,
                                         HttpServletRequest request) {
         try {
             Note note = iNoteService.addNote(noteMapper.toEntity(noteDto));
-            log.info("Note ajoutée avec succès pour le patient {}", note.getPatId());
+            log.info("Note successfully added for patient {}", note.getPatId());
 
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(noteMapper.toDto(note));
 
         } catch (Exception e) {
-            // En cas d’erreur côté serveur
-            log.error("Erreur lors de l'ajout de la note : {}", e.getMessage());
+            log.error("Error adding note: {}", e.getMessage());
 
             ApiErrorResponse error = ApiErrorResponse.builder()
                     .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .message("Impossible de créer la note : " + e.getMessage())
+                    .message("Unable to create note: " + e.getMessage())
                     .timestamp(LocalDateTime.now())
                     .path(request.getRequestURI())
                     .build();
@@ -78,7 +94,14 @@ public class NoteController {
         }
     }
 
-    // Modifier uniquement la note d’un patient
+    /**
+     * Updates a note for a patient.
+     *
+     * @param noteUpdateDto Note update DTO
+     * @param id            Note ID
+     * @param request       HttpServletRequest for error path
+     * @return Updated note or error response
+     */
     @PutMapping("/{id}")
     public ResponseEntity<?> updateNotePatient(
             @Valid @RequestBody NoteUpdateDto noteUpdateDto,
@@ -87,15 +110,16 @@ public class NoteController {
 
         try {
             Note existing = iNoteService.findNoteById(id)
-                    .orElseThrow(() -> new NoteNotFoundException("La note avec l'id " + id + " n'existe pas"));
+                    .orElseThrow(() -> new NoteNotFoundException("Note with id " + id + " does not exist"));
 
-            // Mettre à jour uniquement le note et la date de mis à jour
+            // Update note content and updated date
             existing.setNote(noteUpdateDto.getNote());
             existing.setUpdatedNoteDate(Instant.now());
-            // Sauvegarde
+
+            // Save updated note
             Note updated = iNoteService.updateNote(id, noteUpdateDto.getNote());
 
-            log.info("Note modifiée avec succès pour le patient {}", updated.getPatId());
+            log.info("Note successfully updated for patient {}", updated.getPatId());
 
             return ResponseEntity.ok(noteMapper.toDto(updated));
 
@@ -112,7 +136,7 @@ public class NoteController {
         } catch (Exception e) {
             ApiErrorResponse errorResponse = ApiErrorResponse.builder()
                     .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .message("Impossible de modifier la note : " + e.getMessage())
+                    .message("Unable to update note: " + e.getMessage())
                     .timestamp(LocalDateTime.now())
                     .path(request.getRequestURI())
                     .build();
@@ -121,18 +145,24 @@ public class NoteController {
         }
     }
 
-    //supprime une note
+    /**
+     * Deletes a note by its ID.
+     *
+     * @param id      Note ID
+     * @param request HttpServletRequest for error path
+     * @return Success message or error response
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteNotePatient(@PathVariable String id,
                                                HttpServletRequest request) {
         try {
             iNoteService.deleteNote(id);
-            log.info("Note avec id {} supprimée avec succès", id);
+            log.info("Note with id {} successfully deleted", id);
 
-            return ResponseEntity.ok("Note supprimée");
+            return ResponseEntity.ok("Note deleted");
 
         } catch (NoteNotFoundException e) {
-            log.error("Erreur suppression note : {}", e.getMessage());
+            log.error("Error deleting note: {}", e.getMessage());
 
             ApiErrorResponse errorResponse = ApiErrorResponse.builder()
                     .status(HttpStatus.NOT_FOUND.value())
@@ -144,11 +174,11 @@ public class NoteController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
 
         } catch (Exception e) {
-            log.error("Erreur serveur lors de la suppression de la note : {}", e.getMessage());
+            log.error("Server error when deleting note: {}", e.getMessage());
 
             ApiErrorResponse errorResponse = ApiErrorResponse.builder()
                     .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .message("Impossible de supprimer la note : " + e.getMessage())
+                    .message("Unable to delete note: " + e.getMessage())
                     .timestamp(LocalDateTime.now())
                     .path(request.getRequestURI())
                     .build();
@@ -156,7 +186,4 @@ public class NoteController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
-
-
-
 }

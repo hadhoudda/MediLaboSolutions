@@ -16,4 +16,5 @@ public class NoteDto {
     private String note;
     private Instant createdNoteDate;
     private Instant updatedNoteDate;
+
 }

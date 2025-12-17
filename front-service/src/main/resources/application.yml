@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: front-service
+  cloud:
+    config:
+      enabled: false       # Disable the Config Server
+    discovery:
+      enabled: true         # Enables service discovery
+
+server:
+  port: 8090
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true

@@ -1,0 +1,16 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/notemedilabo_test_db  # Connexion à MongoDB local pour les tests
+      database: notemedilabo_test_db                        # Nom de la base de test
+
+  cloud:
+    config:
+      enabled: false               # Désactive Spring Cloud Config pour l'environnement de test
+      import-check:
+        enabled: false             # Désactive la vérification de l'import de configuration
+
+logging:
+  level:
+    root: INFO
+    com.medilabosolutions: DEBUG  # Niveau de logs pour le package de l'application

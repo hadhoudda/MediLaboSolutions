@@ -19,5 +19,4 @@ public class PatientDto {
     private LocalDate dateOfBirth;
     private String gender;
 
-
 }

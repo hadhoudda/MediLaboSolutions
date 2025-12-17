@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring") //injecter automatiquement ce mapper (@Autowired)
+@Mapper(componentModel = "spring") //Automatically inject this mapper (@Autowired)
 public interface NoteMapper {
 
     NoteDto toDto(Note entity);
@@ -14,5 +14,5 @@ public interface NoteMapper {
     Note toEntity(NoteDto dto);
 
     List<NoteDto> toDtoList(List<Note> entities);
-}
 
+}

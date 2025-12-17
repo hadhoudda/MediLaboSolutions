@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: discovery-service  # Name visible in the Eureka registry
+
+# Server configuration
+server:
+  port: 8761
+
+# Eureka client configuration
+eureka:
+  client:
+    fetch-registry: false      # Disable the Config Server
+    register-with-eureka: false # Disable service discovery

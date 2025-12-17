@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: risk-service
+  cloud:
+    config:
+      enabled: false      # Disable Spring Cloud Config
+    discovery:
+      enabled: true       # Enable service discovery (Eureka)
+
+server:
+  port: 8083
+
+# Eureka configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka/
+    register-with-eureka: true    # Register this service with Eureka
+    fetch-registry: true          # Fetch registry from Eureka
+  instance:
+    prefer-ip-address: true       # Use IP address instead of hostname
+
+# Logging configuration
+logging:
+  level:
+    root: INFO
+    com.medilabosolutions: DEBUG
+  file:
+    name: logs/application.log

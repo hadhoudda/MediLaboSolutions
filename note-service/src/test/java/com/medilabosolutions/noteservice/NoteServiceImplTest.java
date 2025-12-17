@@ -1,7 +1,5 @@
 package com.medilabosolutions.noteservice;
 
-
-
 import com.medilabosolutions.noteservice.exceptions.NoteNotFoundException;
 import com.medilabosolutions.noteservice.model.Note;
 import com.medilabosolutions.noteservice.repository.NoteRepository;
@@ -17,17 +15,29 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for the NoteServiceImpl class.
+ *
+ * <p>Tests the service layer methods for retrieving, creating, updating,
+ * and deleting notes using a mocked NoteRepository.</p>
+ */
 class NoteServiceImplTest {
 
     private NoteRepository noteRepository;
     private NoteServiceImpl noteService;
 
+    /**
+     * Set up the mock repository and service before each test.
+     */
     @BeforeEach
     void setUp() {
         noteRepository = mock(NoteRepository.class);
         noteService = new NoteServiceImpl(noteRepository);
     }
 
+    /**
+     * Test retrieving all notes for a given patient ID.
+     */
     @Test
     void testFindAllNoteByPatId() {
         Note n1 = new Note();
@@ -43,13 +53,15 @@ class NoteServiceImplTest {
         verify(noteRepository).findByPatIdOrderByUpdatedNoteDateDesc(5);
     }
 
+    /**
+     * Test finding a note by its ID.
+     */
     @Test
     void testFindNoteById() {
         Note note = new Note();
         note.setId("abc");
 
-        when(noteRepository.findById("abc"))
-                .thenReturn(Optional.of(note));
+        when(noteRepository.findById("abc")).thenReturn(Optional.of(note));
 
         Optional<Note> found = noteService.findNoteById("abc");
 
@@ -57,6 +69,9 @@ class NoteServiceImplTest {
         assertEquals("abc", found.get().getId());
     }
 
+    /**
+     * Test adding a new note.
+     */
     @Test
     void testAddNote() {
         Note note = new Note();
@@ -70,6 +85,10 @@ class NoteServiceImplTest {
         verify(noteRepository).save(note);
     }
 
+    /**
+     * Test updating an existing note.
+     * Expects the note content and updated date to be changed.
+     */
     @Test
     void testUpdateNote() throws Exception, NoteNotFoundException {
         Note existing = new Note();
@@ -88,6 +107,10 @@ class NoteServiceImplTest {
         verify(noteRepository).save(existing);
     }
 
+    /**
+     * Test updating a note that does not exist.
+     * Expects NoteNotFoundException to be thrown.
+     */
     @Test
     void testUpdateNote_NotFound() {
         when(noteRepository.findById("404")).thenReturn(Optional.empty());
@@ -96,6 +119,9 @@ class NoteServiceImplTest {
                 () -> noteService.updateNote("404", "xxx"));
     }
 
+    /**
+     * Test deleting an existing note.
+     */
     @Test
     void testDeleteNote() throws Exception, NoteNotFoundException {
         Note existing = new Note();
@@ -108,6 +134,10 @@ class NoteServiceImplTest {
         verify(noteRepository).delete(existing);
     }
 
+    /**
+     * Test deleting a note that does not exist.
+     * Expects NoteNotFoundException to be thrown.
+     */
     @Test
     void testDeleteNote_NotFound() {
         when(noteRepository.findById("not-found")).thenReturn(Optional.empty());

@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: patient-service
+  datasource:
+    url: jdbc:mysql://mysql:3306/patient_P9_db?serverTimezone=UTC
+    username:      # Database username
+    password:      # Database password
+  jpa:
+    hibernate:
+      ddl-auto: update
+      init:
+        mode: never
+  cloud:
+    config:
+      enabled: false  # Disable Spring Cloud Config
+    discovery:
+      enabled: true   # Enable service discovery (Eureka)
+
+server:
+  port: 8081
+
+# Logging configuration
+logging:
+  level:
+    root: INFO
+    com.medilabosolutions: DEBUG  # Enable debug logging for your package
+    org:
+      hibernate:
+        SQL: DEBUG  # Log SQL statements
+        type:
+          descriptor:
+            sql: TRACE  # Log SQL parameters
+      springframework:
+        orm:
+          jpa: DEBUG  # Log Spring ORM/JPA operations
+  file:
+    name: logs/application.log  # Log file location
+
+# Eureka configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka/
+    register-with-eureka: true  # Register this service with Eureka
+    fetch-registry: true        # Fetch registry from Eureka
+  instance:
+    prefer-ip-address: true
