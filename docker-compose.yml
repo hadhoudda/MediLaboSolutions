@@ -40,6 +40,7 @@ services:
 
   # Eureka Discovery Service
   discovery-service:
+    image: discovery-service:${APP_VERSION}
     build: ./discovery-service
     container_name: discovery-service
     ports:
@@ -50,6 +51,7 @@ services:
 
   # Gateway Service
   gateway-service:
+    image: gateway-service:${APP_VERSION}
     build: ./gateway-service
     container_name: gateway-service
     ports:
@@ -66,6 +68,7 @@ services:
 
   # Patient Service
   patient-service:
+    image: patient-service:${APP_VERSION}
     build: ./patient-service
     container_name: patient-service
     ports:
@@ -90,6 +93,7 @@ services:
 
   # Note Service
   note-service:
+    image: note-service:${APP_VERSION}
     build: ./note-service
     container_name: note-service
     ports:
@@ -112,6 +116,7 @@ services:
 
   # Risk Service
   risk-service:
+    image: risk-service:${APP_VERSION}
     build: ./risk-service
     container_name: risk-service
     ports:
@@ -131,6 +136,7 @@ services:
 
   # Front Service
   front-service:
+    image: front-service:${APP_VERSION}
     build: ./front-service
     container_name: front-service
     ports:

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="UTF-8">
         <title>Error</title>
@@ -17,7 +17,10 @@
                 <div class="card-body">
                     <h1 class="display-4 text-danger mb-3">Erreur [[${status}]]</h1>
                     <p class="lead mb-4">[[${errorMessage}]]</p>
-                    <a href="/patient-list" class="btn btn-primary btn-lg">Retour à l'accueil</a>
+                    <a th:href="@{/patients}"  class="btn btn-primary btn-lg">
+                        Retour
+                    </a>
+
                 </div>
             </div>
         </div>
