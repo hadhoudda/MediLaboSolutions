@@ -27,3 +27,17 @@ logging:
     com.medilabosolutions: DEBUG
   file:
     name: logs/application.log
+
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka/

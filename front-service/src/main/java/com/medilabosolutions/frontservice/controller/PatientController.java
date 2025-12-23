@@ -52,23 +52,6 @@ public class PatientController {
      * @param model the Spring model to pass data to the view
      * @return the view name "patient-details"
      */
-//    @GetMapping("/patients/{id}")
-//    public String getPatientDetails(@PathVariable int id, Model model) {
-//
-//        PatientBean patient = patientGatewayClient.getPatientById(id);
-//
-//        RiskBean risk = riskGatewayClient.getRiskPatient(id);
-//
-//        if (risk == null) {
-//            risk = new RiskBean();
-//            risk.setRiskLevel("None");
-//        }
-//
-//        model.addAttribute("patient", patient);
-//        model.addAttribute("risk", risk);
-//
-//        return "patient-details";
-//    }
 
     @GetMapping("/patients/{id}")
     public String getPatientDetails(@PathVariable int id, Model model) {

@@ -1,4 +1,4 @@
-package com.medilabosolutions.noteservice;
+package com.medilabosolutions.noteservice.unitaire;
 
 import com.medilabosolutions.noteservice.exceptions.NoteNotFoundException;
 import com.medilabosolutions.noteservice.model.Note;

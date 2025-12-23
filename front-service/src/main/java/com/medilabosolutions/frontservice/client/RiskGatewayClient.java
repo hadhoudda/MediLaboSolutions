@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  */
 @FeignClient(
         name = "risk-service",
+        url = "${gateway.url}",
         configuration = FeignConfig.class
 )
 public interface RiskGatewayClient {
@@ -23,7 +24,7 @@ public interface RiskGatewayClient {
      * @param id the patient identifier
      * @return the patient's risk assessment
      */
-    @GetMapping("/api/risk/patient/{id}")
+    @GetMapping("risk-service/api/risk/patient/{id}")
     RiskBean getRiskPatient(@PathVariable("id") int id);
 
 }

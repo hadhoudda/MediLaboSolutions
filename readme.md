@@ -15,12 +15,11 @@ le diabète est calculée et affichée sur la page d’informations du patient.
 * Docker
 * IDE Intellij
 
-## Architecture l'application
+## Architecture de l'application
 
 ![img.png](img.png)
 
 ## Le Green Code
-#### Comment appliquer le Green Code dans ce projet
 
 1. Optimiser la gestion des notes et des patients
 

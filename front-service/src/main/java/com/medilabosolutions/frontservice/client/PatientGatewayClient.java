@@ -13,6 +13,7 @@ import java.util.List;
  */
 @FeignClient(
         name = "patient-service",
+        url = "${gateway.url}",
         configuration = FeignConfig.class
 )
 public interface PatientGatewayClient {
@@ -22,7 +23,7 @@ public interface PatientGatewayClient {
      *
      * @return a list of patients
      */
-    @GetMapping("/api/patients")
+    @GetMapping("patient-service/api/patients")
     List<PatientBean> getListPatient();
 
     /**
@@ -31,7 +32,7 @@ public interface PatientGatewayClient {
      * @param id the patient identifier
      * @return the corresponding patient
      */
-    @GetMapping("/api/patients/{id}")
+    @GetMapping("patient-service/api/patients/{id}")
     PatientBean getPatientById(@PathVariable("id") int id);
 
     /**
@@ -40,7 +41,7 @@ public interface PatientGatewayClient {
      * @param patientBean the patient data to create
      * @return the created patient
      */
-    @PostMapping("/api/patients")
+    @PostMapping("patient-service/api/patients")
     PatientBean createPatient(@RequestBody PatientBean patientBean);
 
     /**
@@ -49,7 +50,7 @@ public interface PatientGatewayClient {
      * @param id the patient identifier
      * @param patientBean the updated patient data
      */
-    @PutMapping("/api/patients/{id}")
+    @PutMapping("patient-service/api/patients/{id}")
     void updatePatient(@PathVariable int id, @RequestBody PatientBean patientBean);
 
 }

@@ -129,6 +129,7 @@ services:
       gateway-service:
         condition: service_started
     environment:
+      SPRING_PROFILES_ACTIVE: docker
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
     restart: unless-stopped
     networks:
@@ -140,14 +141,11 @@ services:
     build: ./front-service
     container_name: front-service
     ports:
-      - "8090:8090"
+      - "8080:8080"
     expose:
-      - "8090"
-    depends_on:
-      discovery-service:
-        condition: service_started
+      - "8080"
     environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
+      GATEWAY_URL: http://gateway-service:8888
     restart: unless-stopped
     networks:
       - medilabo-net

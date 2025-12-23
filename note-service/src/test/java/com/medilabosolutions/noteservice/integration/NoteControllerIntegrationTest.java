@@ -1,4 +1,4 @@
-package com.medilabosolutions.noteservice;
+package com.medilabosolutions.noteservice.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medilabosolutions.noteservice.dto.NoteDto;

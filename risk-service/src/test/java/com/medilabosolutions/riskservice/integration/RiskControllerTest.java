@@ -13,9 +13,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,8 +94,8 @@ class RiskControllerTest {
 
         ResponseEntity<?> response = controller.getRiskAssessmentPatient(1);
 
-        assertEquals(404, response.getStatusCodeValue());
-        assertTrue(response.getBody().toString().contains("non trouvé"));
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("Patient with ID 1 not found.", response.getBody());
     }
 
     /**
@@ -101,12 +103,12 @@ class RiskControllerTest {
      */
     @Test
     void testGetRiskAssessmentPatient_patientClientError() {
-        when(patientClient.getPatientById(1)).thenThrow(new RuntimeException("Erreur"));
+        when(patientClient.getPatientById(1)).thenThrow(new RuntimeException("Some error"));
 
         ResponseEntity<?> response = controller.getRiskAssessmentPatient(1);
 
-        assertEquals(500, response.getStatusCodeValue());
-        assertTrue(response.getBody().toString().contains("Erreur lors de la récupération du patient"));
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertTrue(response.getBody().toString().contains("Error fetching patient data"));
     }
 
     /**
@@ -134,12 +136,12 @@ class RiskControllerTest {
     @Test
     void testGetRiskAssessmentPatient_notesError() {
         when(patientClient.getPatientById(1)).thenReturn(patient);
-        when(noteClient.getNotesByPatientId(1)).thenThrow(new RuntimeException("Erreur Notes"));
+        when(noteClient.getNotesByPatientId(1)).thenThrow(new RuntimeException("Notes error"));
 
         ResponseEntity<?> response = controller.getRiskAssessmentPatient(1);
 
-        assertEquals(500, response.getStatusCodeValue());
-        assertTrue(response.getBody().toString().contains("Erreur lors de la récupération des notes"));
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertTrue(response.getBody().toString().contains("Error fetching patient notes"));
     }
 
     /**
@@ -148,14 +150,13 @@ class RiskControllerTest {
     @Test
     void testGetRiskAssessmentPatient_riskServiceError() {
         when(patientClient.getPatientById(1)).thenReturn(patient);
-        when(noteClient.getNotesByPatientId(1)).thenReturn(List.of());
-
-        when(riskService.assessmentPatientRisk(patient, List.of()))
-                .thenThrow(new RuntimeException("Erreur Service"));
+        when(noteClient.getNotesByPatientId(1)).thenReturn(Collections.emptyList());
+        when(riskService.assessmentPatientRisk(patient, Collections.emptyList()))
+                .thenThrow(new RuntimeException("Risk service error"));
 
         ResponseEntity<?> response = controller.getRiskAssessmentPatient(1);
 
-        assertEquals(500, response.getStatusCodeValue());
-        assertTrue(response.getBody().toString().contains("Erreur lors de l'évaluation du risque"));
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertTrue(response.getBody().toString().contains("Error during risk assessment"));
     }
 }

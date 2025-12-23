@@ -12,6 +12,7 @@ import java.util.List;
  */
 @FeignClient(
         name = "note-service",
+        url = "${gateway.url}",
         configuration = FeignConfig.class
 )
 public interface NoteGatewayClient {
@@ -22,7 +23,7 @@ public interface NoteGatewayClient {
      * @param patId the patient identifier
      * @return the list of notes for the given patient
      */
-    @GetMapping("/api/notes/patient/{patId}")
+    @GetMapping("note-service/api/notes/patient/{patId}")
     List<NoteBean> getNotesByPatientId(@PathVariable("patId") int patId);
 
     /**
@@ -31,7 +32,7 @@ public interface NoteGatewayClient {
      * @param noteBean the note to be created
      * @return the created note
      */
-    @PostMapping("/api/notes/patient")
+    @PostMapping("note-service/api/notes/patient")
     NoteBean createNote(@RequestBody NoteBean noteBean);
 
     /**
@@ -40,7 +41,7 @@ public interface NoteGatewayClient {
      * @param id the note identifier
      * @param noteBean the updated note data
      */
-    @PutMapping("/api/notes/{id}")
+    @PutMapping("note-service/api/notes/{id}")
     void updateNote(@PathVariable String id, @RequestBody NoteBean noteBean);
 
     /**
@@ -48,6 +49,6 @@ public interface NoteGatewayClient {
      *
      * @param id the note identifier
      */
-    @DeleteMapping("/api/notes/{id}")
+    @DeleteMapping("note-service/api/notes/{id}")
     void deleteNotePatientById(@PathVariable String id);
 }
