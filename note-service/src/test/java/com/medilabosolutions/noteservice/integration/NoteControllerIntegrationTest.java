@@ -20,12 +20,6 @@ import java.time.Instant;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/**
- * Integration tests for the NoteController.
- *
- * <p>Tests the API endpoints for retrieving, creating, updating, and deleting notes.
- * Uses MockMvc with a mock security context for authentication.</p>
- */
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
@@ -69,70 +63,87 @@ public class NoteControllerIntegrationTest {
 
     /**
      * Test retrieving all notes for an existing patient.
-     * Expects HTTP 200 and the correct note content.
      */
     @Test
     @WithMockUser(username = "user", roles = "USER")
     void testGetAllNotesByPatientId() throws Exception {
-        mockMvc.perform(get("/api/notes/patient/{patId}", 1))
+        // Given
+        int patId = 1;
+
+        // When
+        mockMvc.perform(get("/api/notes/patient/{patId}", patId))
+                // Then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].note").value("Note de test"));
     }
 
     /**
      * Test creating a new note for a patient.
-     * Expects HTTP 201 and the correct note content in the response.
      */
     @Test
     @WithMockUser(username = "user", roles = "USER")
     void testCreateNote() throws Exception {
+        // Given
         NoteDto noteDto = new NoteDto();
         noteDto.setPatId(2);
         noteDto.setNote("Nouvelle note");
 
+        // When
         mockMvc.perform(post("/api/notes/patient")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(noteDto)))
+                // Then
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.note").value("Nouvelle note"));
     }
 
     /**
      * Test updating an existing note.
-     * Expects HTTP 200 and the updated note content.
      */
     @Test
     @WithMockUser(username = "user", roles = "USER")
     void testUpdateNote() throws Exception {
+        // Given
         String updatedText = "Note mise à jour";
+        String noteId = testNote.getId();
 
-        mockMvc.perform(put("/api/notes/{id}", testNote.getId())
+        // When
+        mockMvc.perform(put("/api/notes/{id}", noteId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"note\":\"" + updatedText + "\"}"))
+                // Then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.note").value(updatedText));
     }
 
     /**
      * Test deleting an existing note.
-     * Expects HTTP 200 and confirmation message.
      */
     @Test
     @WithMockUser(username = "user", roles = "USER")
     void testDeleteNote() throws Exception {
-        mockMvc.perform(delete("/api/notes/{id}", testNote.getId()))
+        // Given
+        String noteId = testNote.getId();
+
+        // When
+        mockMvc.perform(delete("/api/notes/{id}", noteId))
+                // Then
                 .andExpect(status().isOk())
                 .andExpect(content().string("Note deleted"));
     }
 
     /**
      * Test retrieving notes for a non-existing patient.
-     * Expects HTTP 404 with appropriate error message.
      */
     @Test
     @WithMockUser(username = "user", roles = "USER")
     void testGetNotesForNonExistingPatient() throws Exception {
-        mockMvc.perform(get("/api/notes/patient/{patId}", 999))
+        // Given
+        int nonExistingPatId = 999;
+
+        // When
+        mockMvc.perform(get("/api/notes/patient/{patId}", nonExistingPatId))
+                // Then
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message")
                         .value("No notes found for patient with id: 999 or patient does not exist."));

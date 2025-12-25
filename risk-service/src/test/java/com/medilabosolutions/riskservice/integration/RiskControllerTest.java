@@ -23,13 +23,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-/**
- * Integration tests for RiskController using Mockito.
- * <p>
- * Tests various scenarios for retrieving patient risk assessments,
- * including successful retrieval, patient not found, null notes,
- * and service errors.
- */
 @ExtendWith(MockitoExtension.class)
 class RiskControllerTest {
 
@@ -47,12 +40,9 @@ class RiskControllerTest {
 
     private PatientDto patient;
 
-    /**
-     * Setup common test data before each test.
-     */
     @BeforeEach
     void setup() {
-        // Create a sample patient for testing
+        // GIVEN: a sample patient for testing
         patient = new PatientDto(
                 1,
                 "John",
@@ -62,100 +52,93 @@ class RiskControllerTest {
         );
     }
 
-    /**
-     * Test successful risk assessment retrieval.
-     */
     @Test
     void testGetRiskAssessmentPatient_success() {
-        // GIVEN
-        List<NoteDto> notes = List.of(
-                new NoteDto("1", 1, "smoker", null, null)
-        );
+        // GIVEN: patient exists and has notes
+        List<NoteDto> notes = List.of(new NoteDto("1", 1, "smoker", null, null));
         RiskResponseDto risk = new RiskResponseDto(1, 44, "Borderline");
 
         when(patientClient.getPatientById(1)).thenReturn(patient);
         when(noteClient.getNotesByPatientId(1)).thenReturn(notes);
         when(riskService.assessmentPatientRisk(patient, notes)).thenReturn(risk);
 
-        // WHEN
+        // WHEN: retrieving risk assessment for the patient
         ResponseEntity<?> response = controller.getRiskAssessmentPatient(1);
 
-        // THEN
+        // THEN: response is 200 OK and contains the correct risk assessment
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(risk, response.getBody());
     }
 
-    /**
-     * Test scenario where the patient is not found.
-     */
     @Test
     void testGetRiskAssessmentPatient_patientNotFound() {
+        // GIVEN: patient does not exist
         when(patientClient.getPatientById(1)).thenReturn(null);
 
+        // WHEN: retrieving risk assessment for non-existent patient
         ResponseEntity<?> response = controller.getRiskAssessmentPatient(1);
 
+        // THEN: response is 404 Not Found with appropriate message
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals("Patient with ID 1 not found.", response.getBody());
     }
 
-    /**
-     * Test scenario where the patient client throws an exception.
-     */
     @Test
     void testGetRiskAssessmentPatient_patientClientError() {
+        // GIVEN: patient client throws an exception
         when(patientClient.getPatientById(1)).thenThrow(new RuntimeException("Some error"));
 
+        // WHEN: retrieving risk assessment
         ResponseEntity<?> response = controller.getRiskAssessmentPatient(1);
 
+        // THEN: response is 500 Internal Server Error with error message
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertTrue(response.getBody().toString().contains("Error fetching patient data"));
     }
 
-    /**
-     * Test scenario where notes are null (should be treated as empty list).
-     */
     @Test
     void testGetRiskAssessmentPatient_notesNull() {
+        // GIVEN: patient exists but notes are null
         when(patientClient.getPatientById(1)).thenReturn(patient);
         when(noteClient.getNotesByPatientId(1)).thenReturn(null);
 
         RiskResponseDto expected = new RiskResponseDto(1, 44, "None");
+        when(riskService.assessmentPatientRisk(eq(patient), anyList())).thenReturn(expected);
 
-        when(riskService.assessmentPatientRisk(eq(patient), anyList()))
-                .thenReturn(expected);
-
+        // WHEN: retrieving risk assessment
         ResponseEntity<?> response = controller.getRiskAssessmentPatient(1);
 
+        // THEN: response is 200 OK and risk assessment uses empty notes list
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(expected, response.getBody());
     }
 
-    /**
-     * Test scenario where the note client throws an exception.
-     */
     @Test
     void testGetRiskAssessmentPatient_notesError() {
+        // GIVEN: patient exists but note client throws exception
         when(patientClient.getPatientById(1)).thenReturn(patient);
         when(noteClient.getNotesByPatientId(1)).thenThrow(new RuntimeException("Notes error"));
 
+        // WHEN: retrieving risk assessment
         ResponseEntity<?> response = controller.getRiskAssessmentPatient(1);
 
+        // THEN: response is 500 Internal Server Error with appropriate message
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertTrue(response.getBody().toString().contains("Error fetching patient notes"));
     }
 
-    /**
-     * Test scenario where the risk service throws an exception.
-     */
     @Test
     void testGetRiskAssessmentPatient_riskServiceError() {
+        // GIVEN: patient exists, notes are empty, but risk service throws exception
         when(patientClient.getPatientById(1)).thenReturn(patient);
         when(noteClient.getNotesByPatientId(1)).thenReturn(Collections.emptyList());
         when(riskService.assessmentPatientRisk(patient, Collections.emptyList()))
                 .thenThrow(new RuntimeException("Risk service error"));
 
+        // WHEN: retrieving risk assessment
         ResponseEntity<?> response = controller.getRiskAssessmentPatient(1);
 
+        // THEN: response is 500 Internal Server Error with appropriate message
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertTrue(response.getBody().toString().contains("Error during risk assessment"));
     }

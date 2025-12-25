@@ -16,14 +16,6 @@ import java.util.List;
 
 /**
  * REST controller for managing patients.
- *
- * Exposes endpoints to:
- * - Retrieve all patients
- * - Retrieve a patient by ID
- * - Create a new patient
- * - Update an existing patient
- *
- * Uses PatientMapper to convert between entities and DTOs.
  */
 @Slf4j
 @RestController
@@ -36,7 +28,6 @@ public class PatientController {
 
     /**
      * GET /api/patients
-     *
      * Retrieves all patients.
      * Returns 204 No Content if the list is empty.
      *
@@ -57,7 +48,6 @@ public class PatientController {
 
     /**
      * GET /api/patients/{id}
-     *
      * Retrieves a single patient by ID.
      * Throws PatientNotFoundException if the patient does not exist.
      *
@@ -75,7 +65,6 @@ public class PatientController {
 
     /**
      * POST /api/patients
-     *
      * Creates a new patient.
      * Validates the request body using @Valid.
      * Returns 201 Created on success.
@@ -91,7 +80,6 @@ public class PatientController {
 
     /**
      * PUT /api/patients/{id}
-     *
      * Updates an existing patient.
      * Validates the request body and checks if the patient exists.
      * Throws PatientNotFoundException if the patient does not exist.

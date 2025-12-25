@@ -15,10 +15,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * Security configuration for the Note Service.
- *
- * <p>Protects API endpoints with HTTP Basic authentication and allows
- * public access to static resources and login page. Uses in-memory user
- * for authentication.</p>
  */
 @Configuration
 @EnableWebSecurity
@@ -26,11 +22,6 @@ public class SecurityConfig {
 
     /**
      * Configures HTTP security for the application.
-     *
-     * <p>API endpoints (/api/**) are protected and require authentication.
-     * Static resources and root paths are publicly accessible.
-     * CSRF is disabled, HTTP Basic authentication enabled, and form login disabled.</p>
-     *
      * @param http HttpSecurity instance to configure
      * @return configured SecurityFilterChain
      * @throws Exception if configuration fails
@@ -65,10 +56,6 @@ public class SecurityConfig {
 
     /**
      * In-memory user details service for authentication.
-     *
-     * <p>Defines a single user with username "user", password "1234" (encoded),
-     * and role "USER".</p>
-     *
      * @param encoder PasswordEncoder bean
      * @return UserDetailsService containing in-memory user
      */

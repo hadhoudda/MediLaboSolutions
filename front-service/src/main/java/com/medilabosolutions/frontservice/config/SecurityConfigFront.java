@@ -26,14 +26,6 @@ public class SecurityConfigFront {
     /**
      * Configures the security filter chain for HTTP requests.
      *
-     * <ul>
-     *     <li>Disables CSRF protection</li>
-     *     <li>Allows public access to login page and static resources</li>
-     *     <li>Secures all other endpoints</li>
-     *     <li>Enables form-based authentication</li>
-     *     <li>Enables HTTP Basic authentication</li>
-     * </ul>
-     *
      * @param http the {@link HttpSecurity} to configure
      * @return the configured {@link SecurityFilterChain}
      * @throws Exception if a security configuration error occurs

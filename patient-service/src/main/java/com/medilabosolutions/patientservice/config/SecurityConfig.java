@@ -16,10 +16,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * Security configuration for the Patient Service.
- * This class sets up basic HTTP security with:
- * - HTTP Basic authentication
- * - Disabled CSRF for simplicity (use with caution in production)
- * - In-memory user for testing purposes
  */
 @Configuration
 @EnableWebSecurity
@@ -64,7 +60,6 @@ public class SecurityConfig {
 
     /**
      * Configures an in-memory user details service.
-     *
      * Creates a single user with username "user" and password "1234" (encoded with BCrypt).
      * In a real application, replace with a database-backed UserDetailsService.
      *

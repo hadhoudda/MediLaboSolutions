@@ -12,13 +12,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Implementation of the INoteService interface.
- *
- * <p>Provides CRUD operations for Notes, including retrieval by patient,
- * creation, update, and deletion. Handles NoteNotFoundException when a note
- * does not exist.</p>
- */
 @Slf4j
 @Service
 public class NoteServiceImpl implements INoteService {

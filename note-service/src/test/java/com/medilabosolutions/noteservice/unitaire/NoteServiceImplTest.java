@@ -15,12 +15,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-/**
- * Unit tests for the NoteServiceImpl class.
- *
- * <p>Tests the service layer methods for retrieving, creating, updating,
- * and deleting notes using a mocked NoteRepository.</p>
- */
 class NoteServiceImplTest {
 
     private NoteRepository noteRepository;
@@ -40,15 +34,16 @@ class NoteServiceImplTest {
      */
     @Test
     void testFindAllNoteByPatId() {
+        // Given
         Note n1 = new Note();
         Note n2 = new Note();
         List<Note> notes = Arrays.asList(n1, n2);
+        when(noteRepository.findByPatIdOrderByUpdatedNoteDateDesc(5)).thenReturn(notes);
 
-        when(noteRepository.findByPatIdOrderByUpdatedNoteDateDesc(5))
-                .thenReturn(notes);
-
+        // When
         List<Note> result = noteService.findAllNoteByPatId(5);
 
+        // Then
         assertEquals(2, result.size());
         verify(noteRepository).findByPatIdOrderByUpdatedNoteDateDesc(5);
     }
@@ -58,13 +53,15 @@ class NoteServiceImplTest {
      */
     @Test
     void testFindNoteById() {
+        // Given
         Note note = new Note();
         note.setId("abc");
-
         when(noteRepository.findById("abc")).thenReturn(Optional.of(note));
 
+        // When
         Optional<Note> found = noteService.findNoteById("abc");
 
+        // Then
         assertTrue(found.isPresent());
         assertEquals("abc", found.get().getId());
     }
@@ -74,33 +71,36 @@ class NoteServiceImplTest {
      */
     @Test
     void testAddNote() {
+        // Given
         Note note = new Note();
         note.setNote("test note");
-
         when(noteRepository.save(note)).thenReturn(note);
 
+        // When
         Note saved = noteService.addNote(note);
 
+        // Then
         assertNotNull(saved);
         verify(noteRepository).save(note);
     }
 
     /**
      * Test updating an existing note.
-     * Expects the note content and updated date to be changed.
      */
     @Test
     void testUpdateNote() throws Exception, NoteNotFoundException {
+        // Given
         Note existing = new Note();
         existing.setId("123");
         existing.setNote("old");
         existing.setUpdatedNoteDate(Instant.now());
-
         when(noteRepository.findById("123")).thenReturn(Optional.of(existing));
         when(noteRepository.save(any(Note.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
+        // When
         Note updated = noteService.updateNote("123", "new note");
 
+        // Then
         assertEquals("new note", updated.getNote());
         assertNotNull(updated.getUpdatedNoteDate());
         verify(noteRepository).findById("123");
@@ -109,12 +109,13 @@ class NoteServiceImplTest {
 
     /**
      * Test updating a note that does not exist.
-     * Expects NoteNotFoundException to be thrown.
      */
     @Test
     void testUpdateNote_NotFound() {
+        // Given
         when(noteRepository.findById("404")).thenReturn(Optional.empty());
 
+        // When / Then
         assertThrows(NoteNotFoundException.class,
                 () -> noteService.updateNote("404", "xxx"));
     }
@@ -124,24 +125,27 @@ class NoteServiceImplTest {
      */
     @Test
     void testDeleteNote() throws Exception, NoteNotFoundException {
+        // Given
         Note existing = new Note();
         existing.setId("999");
-
         when(noteRepository.findById("999")).thenReturn(Optional.of(existing));
 
+        // When
         noteService.deleteNote("999");
 
+        // Then
         verify(noteRepository).delete(existing);
     }
 
     /**
      * Test deleting a note that does not exist.
-     * Expects NoteNotFoundException to be thrown.
      */
     @Test
     void testDeleteNote_NotFound() {
+        // Given
         when(noteRepository.findById("not-found")).thenReturn(Optional.empty());
 
+        // When / Then
         assertThrows(NoteNotFoundException.class,
                 () -> noteService.deleteNote("not-found"));
     }

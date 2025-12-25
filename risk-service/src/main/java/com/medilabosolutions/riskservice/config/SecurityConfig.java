@@ -16,9 +16,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * Security configuration for the Risk Service application.
- * <p>
- * Configures HTTP security, authentication, and user details service.
- * Basic authentication is used with an in-memory user.
  */
 @Configuration
 @EnableWebSecurity
@@ -26,13 +23,6 @@ public class SecurityConfig {
 
     /**
      * Configures the HTTP security filter chain.
-     * <p>
-     * - Disables CSRF protection (for simplicity or API usage).
-     * - Requires authentication for "/api/**" endpoints.
-     * - Permits public access to static resources and login page.
-     * - Enables HTTP Basic authentication.
-     * - Disables form-based login.
-     *
      * @param http HttpSecurity object to configure
      * @return Configured SecurityFilterChain
      * @throws Exception if configuration fails
@@ -64,9 +54,6 @@ public class SecurityConfig {
 
     /**
      * Provides an in-memory user details service.
-     * <p>
-     * Creates a single user with username "user" and password "1234" (BCrypt-encoded) with role "USER".
-     *
      * @param encoder Password encoder to hash the user password
      * @return UserDetailsService instance with in-memory user
      */

@@ -21,9 +21,6 @@ import java.util.List;
 
 /**
  * REST controller for managing Notes.
- *
- * <p>Provides endpoints to create, retrieve, update, and delete notes for patients.
- * Handles error responses consistently with ApiErrorResponse objects.</p>
  */
 @Slf4j
 @RestController
