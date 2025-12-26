@@ -1,6 +1,7 @@
 package com.medilabosolutions.frontservice.Beans;
 
 import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ public class PatientBean {
     private LocalDate dateOfBirth;
     private String gender;
     private String address;
+    @Pattern(regexp = "^[0-9+\\-\\s]{6,20}$", message = "Numéro de téléphone invalide")
     private String telephoneNumber;
 
     public Integer getId() {

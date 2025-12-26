@@ -54,7 +54,7 @@ public class PatientServiceImpl implements IPatientService {
     public Patient addPatient(Patient patient) {
         // Ensure the patient is new (no existing ID)
         Assert.isTrue(patient.getId() == null,
-                "Patient must not have an ID when being created");
+                "Le patient ne doit pas avoir d'ID");
 
         return patientRepository.save(patient);
     }
@@ -70,7 +70,7 @@ public class PatientServiceImpl implements IPatientService {
     public Patient updatePatient(Patient patient) {
         // Ensure the ID is present for update operation
         Assert.notNull(patient.getId(),
-                "ID is required to update a patient");
+                "L'ID est requis pour la mise à jour");
 
         return patientRepository.save(patient);
     }

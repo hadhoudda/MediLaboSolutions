@@ -71,6 +71,11 @@
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Téléphone</label>
                         <input type="text" class="form-control" th:field="*{telephoneNumber}" placeholder="Entrez le numéro de téléphone">
+                        <!-- Message if error number phone -->
+                        <div th:if="${#fields.hasErrors('telephoneNumber')}"
+                             th:errors="*{telephoneNumber}"
+                             class="alert alert-danger py-2 mt-2 text-center">
+                        </div>
                     </div>
 
                     <!-- Button register-->

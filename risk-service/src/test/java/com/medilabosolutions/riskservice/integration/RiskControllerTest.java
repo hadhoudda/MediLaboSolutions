@@ -6,6 +6,10 @@ import com.medilabosolutions.riskservice.controller.RiskController;
 import com.medilabosolutions.riskservice.dto.NoteDto;
 import com.medilabosolutions.riskservice.dto.PatientDto;
 import com.medilabosolutions.riskservice.dto.RiskResponseDto;
+import com.medilabosolutions.riskservice.exception.NoteServiceException;
+import com.medilabosolutions.riskservice.exception.PatientNotFoundException;
+import com.medilabosolutions.riskservice.exception.PatientServiceException;
+import com.medilabosolutions.riskservice.exception.RiskAssessmentException;
 import com.medilabosolutions.riskservice.service.RiskAssessmentServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -75,12 +79,8 @@ class RiskControllerTest {
         // GIVEN: patient does not exist
         when(patientClient.getPatientById(1)).thenReturn(null);
 
-        // WHEN: retrieving risk assessment for non-existent patient
-        ResponseEntity<?> response = controller.getRiskAssessmentPatient(1);
-
-        // THEN: response is 404 Not Found with appropriate message
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals("Patient with ID 1 not found.", response.getBody());
+        // THEN: retrieving risk assessment throws PatientNotFoundException
+        assertThrows(PatientNotFoundException.class, () -> controller.getRiskAssessmentPatient(1));
     }
 
     @Test
@@ -88,12 +88,8 @@ class RiskControllerTest {
         // GIVEN: patient client throws an exception
         when(patientClient.getPatientById(1)).thenThrow(new RuntimeException("Some error"));
 
-        // WHEN: retrieving risk assessment
-        ResponseEntity<?> response = controller.getRiskAssessmentPatient(1);
-
-        // THEN: response is 500 Internal Server Error with error message
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertTrue(response.getBody().toString().contains("Error fetching patient data"));
+        // THEN: retrieving risk assessment throws PatientServiceException
+        assertThrows(PatientServiceException.class, () -> controller.getRiskAssessmentPatient(1));
     }
 
     @Test
@@ -119,12 +115,8 @@ class RiskControllerTest {
         when(patientClient.getPatientById(1)).thenReturn(patient);
         when(noteClient.getNotesByPatientId(1)).thenThrow(new RuntimeException("Notes error"));
 
-        // WHEN: retrieving risk assessment
-        ResponseEntity<?> response = controller.getRiskAssessmentPatient(1);
-
-        // THEN: response is 500 Internal Server Error with appropriate message
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertTrue(response.getBody().toString().contains("Error fetching patient notes"));
+        // THEN: retrieving risk assessment throws NoteServiceException
+        assertThrows(NoteServiceException.class, () -> controller.getRiskAssessmentPatient(1));
     }
 
     @Test
@@ -135,11 +127,7 @@ class RiskControllerTest {
         when(riskService.assessmentPatientRisk(patient, Collections.emptyList()))
                 .thenThrow(new RuntimeException("Risk service error"));
 
-        // WHEN: retrieving risk assessment
-        ResponseEntity<?> response = controller.getRiskAssessmentPatient(1);
-
-        // THEN: response is 500 Internal Server Error with appropriate message
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertTrue(response.getBody().toString().contains("Error during risk assessment"));
+        // THEN: retrieving risk assessment throws RiskAssessmentException
+        assertThrows(RiskAssessmentException.class, () -> controller.getRiskAssessmentPatient(1));
     }
 }

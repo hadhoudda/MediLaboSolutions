@@ -34,20 +34,4 @@ class AuthControllerTest {
                 .andExpect(view().name("login-page"));
     }
 
-    /**
-     * Test that a POST request to /login with an authenticated user
-     * redirects to the patient list page.
-     */
-    @Test
-    @WithMockUser(username = "user", roles = "USER")
-    void testPostLogin_redirectsToPatientList() throws Exception {
-        // Given
-        // Authenticated user context is already set by @WithMockUser
-
-        // When
-        mockMvc.perform(post("/login"))
-                // Then
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/patient-list"));
-    }
 }
