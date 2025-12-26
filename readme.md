@@ -80,20 +80,22 @@ spring
 3. Modifier le mode de gestion du schéma de base de données pour vous pouvez créer les données
 Dans un premier temps, remplacez la ligne suivante :
 
+
     jpa:
         hibernate:
             ddl-auto: update
             init:
                 mode: never
 
-    par :
+par :
+
     jpa:
         hibernate:
             ddl-auto: create
             init:
                 mode: always
 
-    Cela permettra à Hibernate de créer automatiquement toutes les tables à partir des entités Java.
+Cela permettra à Hibernate de créer automatiquement toutes les tables à partir des entités Java.
 
 🔁 Ensuite, une fois les tables créées et l'application correctement démarrée, remplacez de nouveau la ligne par :
 
