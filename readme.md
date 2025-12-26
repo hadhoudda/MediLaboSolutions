@@ -81,7 +81,6 @@ spring
 Dans un premier temps, remplacez la ligne suivante :
 
 
-
     jpa:
         hibernate:
             ddl-auto: update
